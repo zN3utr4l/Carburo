@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tanko/src/data/backup/backup_service.dart';
-import 'package:tanko/src/data/repositories/category_repository_impl.dart';
-import 'package:tanko/src/data/repositories/fill_up_repository_impl.dart';
-import 'package:tanko/src/data/repositories/vehicle_repository_impl.dart';
-import 'package:tanko/src/domain/models/backup_data.dart';
-import 'package:tanko/src/domain/models/enums.dart';
-import 'package:tanko/src/domain/models/fill_up.dart';
-import 'package:tanko/src/domain/models/vehicle.dart';
+import 'package:carburo/src/data/backup/backup_service.dart';
+import 'package:carburo/src/data/repositories/category_repository_impl.dart';
+import 'package:carburo/src/data/repositories/fill_up_repository_impl.dart';
+import 'package:carburo/src/data/repositories/vehicle_repository_impl.dart';
+import 'package:carburo/src/domain/models/backup_data.dart';
+import 'package:carburo/src/domain/models/enums.dart';
+import 'package:carburo/src/domain/models/fill_up.dart';
+import 'package:carburo/src/domain/models/vehicle.dart';
 import '../helpers/test_db.dart';
 
 void main() {

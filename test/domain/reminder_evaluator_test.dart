@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tanko/src/domain/models/enums.dart';
-import 'package:tanko/src/domain/models/reminder.dart';
-import 'package:tanko/src/domain/services/reminder_evaluator.dart';
+import 'package:carburo/src/domain/models/enums.dart';
+import 'package:carburo/src/domain/models/reminder.dart';
+import 'package:carburo/src/domain/services/reminder_evaluator.dart';
 
 Reminder rem({
   TriggerMode triggerMode = TriggerMode.date,

@@ -1,4 +1,4 @@
-name: CI Tanko
+name: CI Carburo
 
 on:
   pull_request:
@@ -54,7 +54,7 @@ jobs:
         uses: dorny/test-reporter@a43b3a5f7366b97d083190328d2c652e1a8b6aa2 # v3.0.0
         if: always()
         with:
-          name: 'Tanko Tests (${{ matrix.os }})'
+          name: 'Carburo Tests (${{ matrix.os }})'
           path: 'test-results.json'
           reporter: 'flutter-json'
 

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tanko/src/domain/models/fill_up.dart';
-import 'package:tanko/src/domain/services/consumption_calculator.dart';
+import 'package:carburo/src/domain/models/fill_up.dart';
+import 'package:carburo/src/domain/services/consumption_calculator.dart';
 
 FillUp fill({
   required int id,

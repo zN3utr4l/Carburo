@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tanko/src/data/backup/backup_service.dart';
-import 'package:tanko/src/domain/models/backup_data.dart';
-import 'package:tanko/src/domain/models/category.dart';
-import 'package:tanko/src/domain/models/enums.dart';
-import 'package:tanko/src/domain/models/expense.dart';
-import 'package:tanko/src/domain/models/fill_up.dart';
-import 'package:tanko/src/domain/models/reminder.dart';
-import 'package:tanko/src/domain/models/vehicle.dart';
+import 'package:carburo/src/data/backup/backup_service.dart';
+import 'package:carburo/src/domain/models/backup_data.dart';
+import 'package:carburo/src/domain/models/category.dart';
+import 'package:carburo/src/domain/models/enums.dart';
+import 'package:carburo/src/domain/models/expense.dart';
+import 'package:carburo/src/domain/models/fill_up.dart';
+import 'package:carburo/src/domain/models/reminder.dart';
+import 'package:carburo/src/domain/models/vehicle.dart';
 
 void main() {
   const service = BackupService();

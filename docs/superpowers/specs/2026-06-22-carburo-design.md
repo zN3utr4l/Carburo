@@ -1,13 +1,13 @@
-# Tanko — Design Spec
+# Carburo — Design Spec
 
 - **Date:** 2026-06-22
 - **Status:** Approved (pending written-spec review)
 - **Author:** Giuseppe Chirico (zN3utr4l)
-- **Repo:** `Tanko` (new, under `D:\repos\Personal`)
+- **Repo:** `Carburo` (new, under `D:\repos\Personal`)
 
 ## 1. Overview
 
-Tanko is a local-first Android app for tracking fuel/refueling expenses for one or
+Carburo is a local-first Android app for tracking fuel/refueling expenses for one or
 more vehicles. It replaces a manual Excel workflow (`Consumi.xlsx`) with a friendlier,
 faster mobile experience and adds metrics the spreadsheet never had: price per liter,
 real fuel consumption, and a comparison between **real** figures and the
@@ -294,7 +294,7 @@ follow.
 | Build | `build_runner` | latest | codegen for freezed/riverpod/drift |
 | Test | `flutter_test`, `mocktail` | latest | |
 
-- **Android:** `minSdk 24`, `applicationId io.github.zn3utr4l.tanko`.
+- **Android:** `minSdk 24`, `applicationId io.github.zn3utr4l.carburo`.
 - **Theming:** Material 3, `ColorScheme.fromSeed`, light/dark.
 
 ## 11. Error handling and validation
@@ -322,7 +322,7 @@ Write tests first for the units that carry the logic:
 ## 13. CI/CD and distribution
 
 Mirrors the personal NE.* convention (PR-gated CI, branch protection, auto-release CD):
-- `ci-tanko.yml` (PR-gated): `flutter analyze` + `dart format --set-exit-if-changed` +
+- `ci-carburo.yml` (PR-gated): `flutter analyze` + `dart format --set-exit-if-changed` +
   `flutter test --coverage`.
 - `ci-version-bump.yml`: bump `pubspec.yaml` version on merge to `main`.
 - `cd-release.yml`: create a GitHub release on tag.

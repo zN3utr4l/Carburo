@@ -1,14 +1,14 @@
-# Tanko — Design Addendum: Scadenze, Costi generali, Calendario
+# Carburo — Design Addendum: Scadenze, Costi generali, Calendario
 
 - **Date:** 2026-06-22
 - **Status:** Approved (one-PR additions to the v1 design)
 - **Author:** Giuseppe Chirico (zN3utr4l)
-- **Builds on:** `2026-06-22-tanko-design.md`
+- **Builds on:** `2026-06-22-carburo-design.md`
 - **Ships in:** ONE pull request (`feat/drivvo-features`). `lib/`/`pubspec.yaml` change ⇒ bump version; CD releases the APK on merge.
 
 ## 1. Overview
 
-Extends Tanko from a fuel tracker into a Drivvo-style vehicle cost manager, staying
+Extends Carburo from a fuel tracker into a Drivvo-style vehicle cost manager, staying
 local-first and keeping the feature-first/layered architecture. Three modules:
 
 1. **Costi generali (Expenses)** — any non-fuel cost (insurance, bollo, revisione,

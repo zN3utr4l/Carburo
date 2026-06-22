@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tanko/src/data/database/database.dart';
-import 'package:tanko/src/data/repositories/expense_repository_impl.dart';
-import 'package:tanko/src/data/repositories/reminder_repository_impl.dart';
-import 'package:tanko/src/data/repositories/vehicle_repository_impl.dart';
-import 'package:tanko/src/domain/models/enums.dart';
-import 'package:tanko/src/domain/models/reminder.dart';
-import 'package:tanko/src/domain/models/vehicle.dart';
-import 'package:tanko/src/features/expenses/expense_form_screen.dart';
-import 'package:tanko/src/features/reminders/scadenze_screen.dart';
-import 'package:tanko/src/providers.dart';
+import 'package:carburo/src/data/database/database.dart';
+import 'package:carburo/src/data/repositories/expense_repository_impl.dart';
+import 'package:carburo/src/data/repositories/reminder_repository_impl.dart';
+import 'package:carburo/src/data/repositories/vehicle_repository_impl.dart';
+import 'package:carburo/src/domain/models/enums.dart';
+import 'package:carburo/src/domain/models/reminder.dart';
+import 'package:carburo/src/domain/models/vehicle.dart';
+import 'package:carburo/src/features/expenses/expense_form_screen.dart';
+import 'package:carburo/src/features/reminders/scadenze_screen.dart';
+import 'package:carburo/src/providers.dart';
 import '../helpers/test_db.dart';
 
 Future<int> _defaultVehicle(AppDatabase db) => VehicleRepositoryImpl(db).upsert(

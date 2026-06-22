@@ -14,7 +14,7 @@ class NotificationService {
 
   static const _details = NotificationDetails(
     android: AndroidNotificationDetails(
-      'tanko_reminders',
+      'carburo_reminders',
       'Scadenze',
       channelDescription: 'Promemoria scadenze veicolo',
       importance: Importance.high,

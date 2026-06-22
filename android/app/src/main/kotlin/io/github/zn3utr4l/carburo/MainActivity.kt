@@ -1,4 +1,4 @@
-package io.github.zn3utr4l.tanko
+package io.github.zn3utr4l.carburo
 
 import io.flutter.embedding.android.FlutterActivity
 

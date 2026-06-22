@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tanko/src/data/repositories/vehicle_repository_impl.dart';
-import 'package:tanko/src/domain/models/catalog.dart';
-import 'package:tanko/src/domain/models/enums.dart';
-import 'package:tanko/src/domain/repositories/catalog_repository.dart';
-import 'package:tanko/src/features/vehicles/add_vehicle_wizard_screen.dart';
-import 'package:tanko/src/providers.dart';
+import 'package:carburo/src/data/repositories/vehicle_repository_impl.dart';
+import 'package:carburo/src/domain/models/catalog.dart';
+import 'package:carburo/src/domain/models/enums.dart';
+import 'package:carburo/src/domain/repositories/catalog_repository.dart';
+import 'package:carburo/src/features/vehicles/add_vehicle_wizard_screen.dart';
+import 'package:carburo/src/providers.dart';
 import '../helpers/test_db.dart';
 
 class _FakeCatalog implements CatalogRepository {

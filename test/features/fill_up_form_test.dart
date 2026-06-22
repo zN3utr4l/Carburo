@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tanko/src/features/fillups/fill_up_form_screen.dart';
-import 'package:tanko/src/providers.dart';
+import 'package:carburo/src/features/fillups/fill_up_form_screen.dart';
+import 'package:carburo/src/providers.dart';
 import '../helpers/test_db.dart';
 
 void main() {

@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tanko/src/domain/models/category.dart';
-import 'package:tanko/src/domain/models/enums.dart';
-import 'package:tanko/src/domain/models/expense.dart';
-import 'package:tanko/src/domain/models/reminder.dart';
+import 'package:carburo/src/domain/models/category.dart';
+import 'package:carburo/src/domain/models/enums.dart';
+import 'package:carburo/src/domain/models/expense.dart';
+import 'package:carburo/src/domain/models/reminder.dart';
 
 void main() {
   test(

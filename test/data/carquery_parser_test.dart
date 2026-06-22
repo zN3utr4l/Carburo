@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tanko/src/domain/models/enums.dart';
-import 'package:tanko/src/data/catalog/carquery_parser.dart';
+import 'package:carburo/src/domain/models/enums.dart';
+import 'package:carburo/src/data/catalog/carquery_parser.dart';
 
 void main() {
   const parser = CarQueryParser();

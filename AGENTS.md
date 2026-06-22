@@ -1,8 +1,8 @@
-# Tanko
+# Carburo
 
 Free, open-source, **local-first** Android app to track fuel/refueling expenses
 (spend, real €/L, real consumption) and compare them to the manufacturer specs.
-All data lives on the device (SQLite). Repo: `github.com/zN3utr4l/Tanko`.
+All data lives on the device (SQLite). Repo: `github.com/zN3utr4l/Carburo`.
 
 **The UI is in Italian; the codebase and docs are in English.**
 

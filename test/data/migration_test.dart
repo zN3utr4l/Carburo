@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqlite3/sqlite3.dart';
-import 'package:tanko/src/data/database/database.dart';
+import 'package:carburo/src/data/database/database.dart';
 import '../helpers/test_db.dart';
 
 void main() {
@@ -29,7 +29,7 @@ void main() {
   test(
     'onUpgrade 1->2 backfills kind, adds tables, seeds expense categories',
     () async {
-      final dir = Directory.systemTemp.createTempSync('tanko_mig');
+      final dir = Directory.systemTemp.createTempSync('carburo_mig');
       addTearDown(() => dir.deleteSync(recursive: true));
       final file = File('${dir.path}/v1.sqlite');
 

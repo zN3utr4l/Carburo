@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tanko/src/domain/models/vehicle.dart';
-import 'package:tanko/src/domain/models/vehicle_stats.dart';
-import 'package:tanko/src/domain/services/range_comparator.dart';
+import 'package:carburo/src/domain/models/vehicle.dart';
+import 'package:carburo/src/domain/models/vehicle_stats.dart';
+import 'package:carburo/src/domain/services/range_comparator.dart';
 
 void main() {
   const comparator = RangeComparator();
