@@ -8,9 +8,15 @@ import 'fillup_providers.dart';
 double? _parse(String s) => double.tryParse(s.trim().replaceAll(',', '.'));
 
 class FillUpFormScreen extends ConsumerStatefulWidget {
-  const FillUpFormScreen({super.key, required this.vehicleId, this.initial});
+  const FillUpFormScreen({
+    super.key,
+    required this.vehicleId,
+    this.initial,
+    this.initialDate,
+  });
   final int vehicleId;
   final FillUp? initial;
+  final DateTime? initialDate;
 
   @override
   ConsumerState<FillUpFormScreen> createState() => _FillUpFormScreenState();
@@ -26,7 +32,8 @@ class _FillUpFormScreenState extends ConsumerState<FillUpFormScreen> {
       TextEditingController(text: widget.initial?.odometer.toString());
   late final _station = TextEditingController(text: widget.initial?.station);
   late final _note = TextEditingController(text: widget.initial?.note);
-  late final DateTime _date = widget.initial?.date ?? DateTime.now();
+  late final DateTime _date =
+      widget.initial?.date ?? widget.initialDate ?? DateTime.now();
   late bool _isFull = widget.initial?.isFull ?? true;
   int? _categoryId;
 

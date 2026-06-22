@@ -37,7 +37,7 @@ void main() {
     );
     raw.execute("INSERT INTO categories (name, color, is_default) VALUES ('Mine', 1, 1);");
     raw.execute('PRAGMA user_version = 1;');
-    raw.dispose();
+    raw.close();
 
     final db = AppDatabase.forTesting(NativeDatabase(file));
     addTearDown(db.close);

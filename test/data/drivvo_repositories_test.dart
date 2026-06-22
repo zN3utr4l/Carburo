@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tanko/src/data/database/database.dart';
 import 'package:tanko/src/data/repositories/expense_repository_impl.dart';
 import 'package:tanko/src/data/repositories/reminder_repository_impl.dart';
 import 'package:tanko/src/data/repositories/vehicle_repository_impl.dart';
@@ -8,7 +9,7 @@ import 'package:tanko/src/domain/models/reminder.dart';
 import 'package:tanko/src/domain/models/vehicle.dart';
 import '../helpers/test_db.dart';
 
-Future<int> _vehicle(db) => VehicleRepositoryImpl(db).upsert(
+Future<int> _vehicle(AppDatabase db) => VehicleRepositoryImpl(db).upsert(
       Vehicle(
         id: 0,
         make: 'R',
