@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tanko/src/data/database/database.dart';
-import 'package:tanko/src/data/repositories/expense_repository_impl.dart';
-import 'package:tanko/src/data/repositories/reminder_repository_impl.dart';
-import 'package:tanko/src/data/repositories/vehicle_repository_impl.dart';
-import 'package:tanko/src/domain/models/enums.dart';
-import 'package:tanko/src/domain/models/expense.dart';
-import 'package:tanko/src/domain/models/reminder.dart';
-import 'package:tanko/src/domain/models/vehicle.dart';
+import 'package:carburo/src/data/database/database.dart';
+import 'package:carburo/src/data/repositories/expense_repository_impl.dart';
+import 'package:carburo/src/data/repositories/reminder_repository_impl.dart';
+import 'package:carburo/src/data/repositories/vehicle_repository_impl.dart';
+import 'package:carburo/src/domain/models/enums.dart';
+import 'package:carburo/src/domain/models/expense.dart';
+import 'package:carburo/src/domain/models/reminder.dart';
+import 'package:carburo/src/domain/models/vehicle.dart';
 import '../helpers/test_db.dart';
 
 Future<int> _vehicle(AppDatabase db) => VehicleRepositoryImpl(db).upsert(

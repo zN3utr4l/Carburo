@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tanko/src/domain/models/category.dart';
-import 'package:tanko/src/domain/models/vehicle.dart';
-import 'package:tanko/src/domain/models/fill_up.dart';
-import 'package:tanko/src/domain/models/enums.dart';
+import 'package:carburo/src/domain/models/category.dart';
+import 'package:carburo/src/domain/models/vehicle.dart';
+import 'package:carburo/src/domain/models/fill_up.dart';
+import 'package:carburo/src/domain/models/enums.dart';
 
 void main() {
   test('Vehicle has default empty specs and round-trips JSON', () {

@@ -1,6 +1,6 @@
 # Carburo ⛽
 
-> App display name: **Carburo**. Repository / package id: `tanko` (`io.github.zn3utr4l.tanko`).
+> App display name: **Carburo**. Repository / package id: `carburo` (`io.github.zn3utr4l.carburo`).
 
 Free, open-source, **local-first** Android app to track fuel/refueling expenses:
 how much you spend, your real price per liter, real consumption (L/100km, km/L),
@@ -54,7 +54,7 @@ After changing models/DB/providers, re-run `build_runner`. Generated files
 
 GitHub Actions, gated through PRs to `main` (mirrors the personal NE.* template):
 
-- **CI** (`ci-tanko.yml`) — `flutter analyze` + tests + coverage + OSV scan.
+- **CI** (`ci-carburo.yml`) — `flutter analyze` + tests + coverage + OSV scan.
 - **Version guard** (`ci-version-bump.yml`) — when `lib/` or `pubspec.yaml`
   changes, the `x.y.z` in `pubspec.yaml` must be a new, unreleased version.
 - **CD** (`cd-release.yml`) — on push to `main`, build the APK and publish a
@@ -77,7 +77,7 @@ Generate one with:
 
 ```bash
 keytool -genkey -v -keystore release.jks -keyalg RSA -keysize 2048 \
-  -validity 10000 -alias tanko
+  -validity 10000 -alias carburo
 base64 -w0 release.jks   # paste into ANDROID_KEYSTORE_BASE64
 ```
 

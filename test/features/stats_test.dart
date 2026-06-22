@@ -2,13 +2,13 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tanko/src/data/repositories/fill_up_repository_impl.dart';
-import 'package:tanko/src/data/repositories/vehicle_repository_impl.dart';
-import 'package:tanko/src/domain/models/enums.dart';
-import 'package:tanko/src/domain/models/fill_up.dart';
-import 'package:tanko/src/domain/models/vehicle.dart';
-import 'package:tanko/src/features/stats/stats_screen.dart';
-import 'package:tanko/src/providers.dart';
+import 'package:carburo/src/data/repositories/fill_up_repository_impl.dart';
+import 'package:carburo/src/data/repositories/vehicle_repository_impl.dart';
+import 'package:carburo/src/domain/models/enums.dart';
+import 'package:carburo/src/domain/models/fill_up.dart';
+import 'package:carburo/src/domain/models/vehicle.dart';
+import 'package:carburo/src/features/stats/stats_screen.dart';
+import 'package:carburo/src/providers.dart';
 import '../helpers/test_db.dart';
 
 void main() {

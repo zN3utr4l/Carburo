@@ -1,4 +1,4 @@
-# Static analysis configuration for Tanko.
+# Static analysis configuration for Carburo.
 include: package:flutter_lints/flutter.yaml
 
 analyzer:

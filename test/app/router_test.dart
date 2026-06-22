@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tanko/src/app/app.dart';
-import 'package:tanko/src/providers.dart';
+import 'package:carburo/src/app/app.dart';
+import 'package:carburo/src/providers.dart';
 import '../helpers/test_db.dart';
 
 void main() {

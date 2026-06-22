@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tanko/src/data/importer/excel_importer.dart';
+import 'package:carburo/src/data/importer/excel_importer.dart';
 
 void main() {
   const importer = ExcelImporter();

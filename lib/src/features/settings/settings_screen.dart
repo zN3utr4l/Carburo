@@ -41,21 +41,21 @@ class SettingsScreen extends ConsumerWidget {
 
   Future<void> _exportJson(WidgetRef ref) async {
     final data = await _gather(ref);
-    await _share(_backup.toJson(data), 'tanko_backup.json');
+    await _share(_backup.toJson(data), 'carburo_backup.json');
   }
 
   Future<void> _exportCsv(WidgetRef ref) async {
     final data = await _gather(ref);
-    await _share(_backup.toCsv(data.fillUps), 'tanko_rifornimenti.csv');
+    await _share(_backup.toCsv(data.fillUps), 'carburo_rifornimenti.csv');
   }
 
   Future<void> _exportExpensesCsv(WidgetRef ref) async {
     final data = await _gather(ref);
-    await _share(_backup.expensesCsv(data.expenses), 'tanko_spese.csv');
+    await _share(_backup.expensesCsv(data.expenses), 'carburo_spese.csv');
   }
 
   Future<void> _restore(BuildContext context, WidgetRef ref) async {
-    const typeGroup = XTypeGroup(label: 'Tanko backup', extensions: ['json']);
+    const typeGroup = XTypeGroup(label: 'Carburo backup', extensions: ['json']);
     final file = await openFile(acceptedTypeGroups: [typeGroup]);
     if (file == null) return;
     final content = await file.readAsString();

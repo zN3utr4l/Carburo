@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 QueryExecutor openConnection() {
   return LazyDatabase(() async {
     final dir = await getApplicationDocumentsDirectory();
-    final file = File(p.join(dir.path, 'tanko.sqlite'));
+    final file = File(p.join(dir.path, 'carburo.sqlite'));
     return NativeDatabase.createInBackground(file);
   });
 }

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tanko/src/core/result.dart';
+import 'package:carburo/src/core/result.dart';
 
 void main() {
   test('Ok carries a value, Err carries a failure', () {

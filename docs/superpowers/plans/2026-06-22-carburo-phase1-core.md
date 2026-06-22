@@ -1,4 +1,4 @@
-# Tanko — Phase 1 (Core) Implementation Plan
+# Carburo — Phase 1 (Core) Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans (the user prefers inline execution, no subagents) to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -8,7 +8,7 @@
 
 **Tech Stack:** Flutter (stable), Riverpod 3.x (code-gen), Freezed 3.x, Drift 2.34, go_router 17.x, fl_chart 1.x, `excel`, `intl`. Tests: `flutter_test` + `mocktail` + in-memory Drift.
 
-**Spec:** `docs/superpowers/specs/2026-06-22-tanko-design.md`
+**Spec:** `docs/superpowers/specs/2026-06-22-carburo-design.md`
 
 ## Global Constraints
 
@@ -16,7 +16,7 @@
 - Freezed 3.x syntax: `@freezed class X with _$X` for data classes, `@freezed sealed class X with _$X` for unions; add `const X._();` when the class has custom getters/methods.
 - Riverpod 3.x code-gen: `@riverpod` annotation, `Ref ref` parameter (not `XRef`), `part 'file.g.dart';`, generated provider is `<name>Provider`.
 - Money in EUR, distance in km, volume in liters; stored canonically.
-- Android `minSdk 24`, `applicationId io.github.zn3utr4l.tanko`.
+- Android `minSdk 24`, `applicationId io.github.zn3utr4l.carburo`.
 - Git identity: `zN3utr4l <zN3utr4l@users.noreply.github.com>` (already configured for `D:\repos\Personal`). Every commit ends with the Co-Authored-By trailer used in the repo's existing commit.
 - TDD: failing test → run (fail) → minimal impl → run (pass) → commit. Frequent commits.
 - All work is offline/local-first in Phase 1 (no network).
@@ -105,9 +105,9 @@ test/
 
 - [ ] **Step 1: Create the Flutter project in-place**
 
-Run from `D:\repos\Personal\Tanko`:
+Run from `D:\repos\Personal\Carburo`:
 ```bash
-flutter create --org io.github.zn3utr4l --project-name tanko --platforms=android .
+flutter create --org io.github.zn3utr4l --project-name carburo --platforms=android .
 ```
 This generates the Android scaffold without clobbering `docs/`.
 
@@ -163,9 +163,9 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Tanko',
+      title: 'Carburo',
       theme: ThemeData(colorSchemeSeed: Colors.teal, useMaterial3: true),
-      home: const Scaffold(body: Center(child: Text('Tanko'))),
+      home: const Scaffold(body: Center(child: Text('Carburo'))),
     );
   }
 }
@@ -189,12 +189,12 @@ void main() {
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tanko/src/app/app.dart';
+import 'package:carburo/src/app/app.dart';
 
 void main() {
   testWidgets('App renders title', (tester) async {
     await tester.pumpWidget(const ProviderScope(child: App()));
-    expect(find.text('Tanko'), findsOneWidget);
+    expect(find.text('Carburo'), findsOneWidget);
   });
 }
 ```
@@ -236,7 +236,7 @@ enum SpecSource { carquery, manual }
 
 ```dart
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tanko/src/core/result.dart';
+import 'package:carburo/src/core/result.dart';
 
 void main() {
   test('Ok carries a value, Err carries a failure', () {
@@ -316,10 +316,10 @@ git commit -m "feat: add domain enums and Result/Failure types"
 
 ```dart
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tanko/src/domain/models/category.dart';
-import 'package:tanko/src/domain/models/vehicle.dart';
-import 'package:tanko/src/domain/models/fill_up.dart';
-import 'package:tanko/src/domain/models/enums.dart';
+import 'package:carburo/src/domain/models/category.dart';
+import 'package:carburo/src/domain/models/vehicle.dart';
+import 'package:carburo/src/domain/models/fill_up.dart';
+import 'package:carburo/src/domain/models/enums.dart';
 
 void main() {
   test('Vehicle has default empty specs and round-trips JSON', () {
@@ -518,8 +518,8 @@ class ConsumptionInterval with _$ConsumptionInterval {
 
 ```dart
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tanko/src/domain/models/fill_up.dart';
-import 'package:tanko/src/domain/services/consumption_calculator.dart';
+import 'package:carburo/src/domain/models/fill_up.dart';
+import 'package:carburo/src/domain/services/consumption_calculator.dart';
 
 FillUp fill({
   required int id,
@@ -715,8 +715,8 @@ class VehicleStats with _$VehicleStats {
 
 ```dart
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tanko/src/domain/models/fill_up.dart';
-import 'package:tanko/src/domain/services/stats_service.dart';
+import 'package:carburo/src/domain/models/fill_up.dart';
+import 'package:carburo/src/domain/services/stats_service.dart';
 
 FillUp fill({
   required int id,
@@ -958,7 +958,7 @@ import 'package:path_provider/path_provider.dart';
 QueryExecutor openConnection() {
   return LazyDatabase(() async {
     final dir = await getApplicationDocumentsDirectory();
-    final file = File(p.join(dir.path, 'tanko.sqlite'));
+    final file = File(p.join(dir.path, 'carburo.sqlite'));
     return NativeDatabase.createInBackground(file);
   });
 }
@@ -1088,7 +1088,7 @@ extension FillUpRowMapper on FillUpData {
 
 ```dart
 import 'package:drift/native.dart';
-import 'package:tanko/src/data/database/database.dart';
+import 'package:carburo/src/data/database/database.dart';
 
 AppDatabase makeTestDb() => AppDatabase.forTesting(NativeDatabase.memory());
 ```
@@ -1178,12 +1178,12 @@ abstract class FillUpRepository {
 
 ```dart
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tanko/src/data/repositories/category_repository_impl.dart';
-import 'package:tanko/src/data/repositories/vehicle_repository_impl.dart';
-import 'package:tanko/src/data/repositories/fill_up_repository_impl.dart';
-import 'package:tanko/src/domain/models/enums.dart';
-import 'package:tanko/src/domain/models/fill_up.dart';
-import 'package:tanko/src/domain/models/vehicle.dart';
+import 'package:carburo/src/data/repositories/category_repository_impl.dart';
+import 'package:carburo/src/data/repositories/vehicle_repository_impl.dart';
+import 'package:carburo/src/data/repositories/fill_up_repository_impl.dart';
+import 'package:carburo/src/domain/models/enums.dart';
+import 'package:carburo/src/domain/models/fill_up.dart';
+import 'package:carburo/src/domain/models/vehicle.dart';
 import '../helpers/test_db.dart';
 
 void main() {
@@ -1405,7 +1405,7 @@ StatsService statsService(Ref ref) => const StatsService();
 ```dart
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tanko/src/providers.dart';
+import 'package:carburo/src/providers.dart';
 import 'helpers/test_db.dart';
 
 void main() {
@@ -1489,8 +1489,8 @@ Future<List<Vehicle>> vehicles(Ref ref) =>
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tanko/src/features/vehicles/vehicles_screen.dart';
-import 'package:tanko/src/providers.dart';
+import 'package:carburo/src/features/vehicles/vehicles_screen.dart';
+import 'package:carburo/src/providers.dart';
 import '../helpers/test_db.dart';
 
 void main() {
@@ -1728,8 +1728,8 @@ Future<List<Category>> categories(Ref ref) =>
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tanko/src/features/fillups/fill_up_form_screen.dart';
-import 'package:tanko/src/providers.dart';
+import 'package:carburo/src/features/fillups/fill_up_form_screen.dart';
+import 'package:carburo/src/providers.dart';
 import '../helpers/test_db.dart';
 
 void main() {
@@ -1971,13 +1971,13 @@ git commit -m "feat: fill-up add/edit form with live price/L and validation"
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tanko/src/data/repositories/fill_up_repository_impl.dart';
-import 'package:tanko/src/data/repositories/vehicle_repository_impl.dart';
-import 'package:tanko/src/domain/models/enums.dart';
-import 'package:tanko/src/domain/models/fill_up.dart';
-import 'package:tanko/src/domain/models/vehicle.dart';
-import 'package:tanko/src/features/fillups/history_screen.dart';
-import 'package:tanko/src/providers.dart';
+import 'package:carburo/src/data/repositories/fill_up_repository_impl.dart';
+import 'package:carburo/src/data/repositories/vehicle_repository_impl.dart';
+import 'package:carburo/src/domain/models/enums.dart';
+import 'package:carburo/src/domain/models/fill_up.dart';
+import 'package:carburo/src/domain/models/vehicle.dart';
+import 'package:carburo/src/features/fillups/history_screen.dart';
+import 'package:carburo/src/providers.dart';
 import '../helpers/test_db.dart';
 
 void main() {
@@ -2159,13 +2159,13 @@ class StatCard extends StatelessWidget {
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tanko/src/data/repositories/fill_up_repository_impl.dart';
-import 'package:tanko/src/data/repositories/vehicle_repository_impl.dart';
-import 'package:tanko/src/domain/models/enums.dart';
-import 'package:tanko/src/domain/models/fill_up.dart';
-import 'package:tanko/src/domain/models/vehicle.dart';
-import 'package:tanko/src/features/dashboard/dashboard_screen.dart';
-import 'package:tanko/src/providers.dart';
+import 'package:carburo/src/data/repositories/fill_up_repository_impl.dart';
+import 'package:carburo/src/data/repositories/vehicle_repository_impl.dart';
+import 'package:carburo/src/domain/models/enums.dart';
+import 'package:carburo/src/domain/models/fill_up.dart';
+import 'package:carburo/src/domain/models/vehicle.dart';
+import 'package:carburo/src/features/dashboard/dashboard_screen.dart';
+import 'package:carburo/src/providers.dart';
 import '../helpers/test_db.dart';
 
 void main() {
@@ -2218,7 +2218,7 @@ class DashboardScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final vehicleAsync = ref.watch(dashboardVehicleProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('Tanko')),
+      appBar: AppBar(title: const Text('Carburo')),
       body: vehicleAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Errore: $e')),
@@ -2397,7 +2397,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Tanko',
+      title: 'Carburo',
       theme: appTheme(Brightness.light),
       darkTheme: appTheme(Brightness.dark),
       routerConfig: appRouter,
@@ -2412,8 +2412,8 @@ Update `test/smoke_test.dart` to pump with an overridden in-memory db (so `appDa
 ```dart
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tanko/src/app/app.dart';
-import 'package:tanko/src/providers.dart';
+import 'package:carburo/src/app/app.dart';
+import 'package:carburo/src/providers.dart';
 import 'helpers/test_db.dart';
 
 void main() {
@@ -2492,7 +2492,7 @@ class ImportResult with _$ImportResult {
 
 ```dart
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tanko/src/data/importer/excel_importer.dart';
+import 'package:carburo/src/data/importer/excel_importer.dart';
 
 void main() {
   const importer = ExcelImporter();
@@ -2752,7 +2752,7 @@ git commit -m "feat: Excel importer and Settings import action"
 
 ## Execution Handoff
 
-Plan complete and saved to `docs/superpowers/plans/2026-06-22-tanko-phase1-core.md`.
+Plan complete and saved to `docs/superpowers/plans/2026-06-22-carburo-phase1-core.md`.
 
 This is Phase 1 (Core) of 5. Phases 2–5 (CarQuery catalog wizard, charts & real-vs-declared comparison, CSV/JSON backup, CI/CD + signed APK) will each get their own plan once Phase 1 lands.
 
