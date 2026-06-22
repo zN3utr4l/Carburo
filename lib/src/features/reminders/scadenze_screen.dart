@@ -34,7 +34,9 @@ class ScadenzeScreen extends ConsumerWidget {
         error: (e, _) => Center(child: Text('Errore: $e')),
         data: (vehicle) {
           if (vehicle == null) {
-            return const Center(child: Text('Aggiungi un veicolo per iniziare.'));
+            return const Center(
+              child: Text('Aggiungi un veicolo per iniziare.'),
+            );
           }
           final evals = ref.watch(reminderEvaluationsProvider(vehicle.id));
           return evals.when(
@@ -45,7 +47,8 @@ class ScadenzeScreen extends ConsumerWidget {
                 : ListView(
                     padding: const EdgeInsets.all(12),
                     children: [
-                      for (final e in list) _ReminderCard(e, vehicleId: vehicle.id),
+                      for (final e in list)
+                        _ReminderCard(e, vehicleId: vehicle.id),
                     ],
                   ),
           );
@@ -134,11 +137,18 @@ class _ReminderCard extends ConsumerWidget {
               _completeSheet(context, ref, r);
             } else if (v == 'edit') {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => ReminderFormScreen(initial: r)),
+                MaterialPageRoute(
+                  builder: (_) => ReminderFormScreen(initial: r),
+                ),
               );
             } else if (v == 'delete') {
-              ref.read(reminderRepositoryProvider).delete(r.id).then(
-                  (_) => ref.invalidate(reminderEvaluationsProvider(vehicleId)));
+              ref
+                  .read(reminderRepositoryProvider)
+                  .delete(r.id)
+                  .then(
+                    (_) =>
+                        ref.invalidate(reminderEvaluationsProvider(vehicleId)),
+                  );
             }
           },
           itemBuilder: (_) => const [
@@ -170,8 +180,10 @@ class _ReminderCard extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Completa: ${r.title}',
-                  style: Theme.of(ctx).textTheme.titleMedium),
+              Text(
+                'Completa: ${r.title}',
+                style: Theme.of(ctx).textTheme.titleMedium,
+              ),
               const SizedBox(height: 8),
               ListTile(
                 contentPadding: EdgeInsets.zero,
@@ -205,7 +217,9 @@ class _ReminderCard extends ConsumerWidget {
               const SizedBox(height: 16),
               FilledButton(
                 onPressed: () async {
-                  await ref.read(reminderRepositoryProvider).complete(
+                  await ref
+                      .read(reminderRepositoryProvider)
+                      .complete(
                         r.id,
                         date: date,
                         createExpense: createExpense,

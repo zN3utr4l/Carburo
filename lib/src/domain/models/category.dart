@@ -16,5 +16,6 @@ abstract class Category with _$Category {
     @Default(0) int ord,
   }) = _Category;
 
-  factory Category.fromJson(Map<String, Object?> json) => _$CategoryFromJson(json);
+  factory Category.fromJson(Map<String, Object?> json) =>
+      _$CategoryFromJson(json);
 }

@@ -24,12 +24,15 @@ class FillUpFormScreen extends ConsumerStatefulWidget {
 
 class _FillUpFormScreenState extends ConsumerState<FillUpFormScreen> {
   final _formKey = GlobalKey<FormState>();
-  late final _amount =
-      TextEditingController(text: widget.initial?.amount.toString());
-  late final _liters =
-      TextEditingController(text: widget.initial?.liters?.toString());
-  late final _odometer =
-      TextEditingController(text: widget.initial?.odometer.toString());
+  late final _amount = TextEditingController(
+    text: widget.initial?.amount.toString(),
+  );
+  late final _liters = TextEditingController(
+    text: widget.initial?.liters?.toString(),
+  );
+  late final _odometer = TextEditingController(
+    text: widget.initial?.odometer.toString(),
+  );
   late final _station = TextEditingController(text: widget.initial?.station);
   late final _note = TextEditingController(text: widget.initial?.note);
   late final DateTime _date =
@@ -55,12 +58,14 @@ class _FillUpFormScreenState extends ConsumerState<FillUpFormScreen> {
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
     final cats = await ref.read(categoriesProvider.future);
-    final categoryId = _categoryId ??
+    final categoryId =
+        _categoryId ??
         cats.firstWhere((c) => c.isDefault, orElse: () => cats.first).id;
     final odometer = _parse(_odometer.text)!;
 
-    final existing =
-        await ref.read(fillUpRepositoryProvider).forVehicle(widget.vehicleId);
+    final existing = await ref
+        .read(fillUpRepositoryProvider)
+        .forVehicle(widget.vehicleId);
     if (existing.isNotEmpty && odometer < existing.last.odometer && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -71,7 +76,9 @@ class _FillUpFormScreenState extends ConsumerState<FillUpFormScreen> {
 
     final now = DateTime.now();
     final base = widget.initial;
-    await ref.read(fillUpRepositoryProvider).upsert(
+    await ref
+        .read(fillUpRepositoryProvider)
+        .upsert(
           FillUp(
             id: base?.id ?? 0,
             vehicleId: widget.vehicleId,
@@ -150,9 +157,13 @@ class _FillUpFormScreenState extends ConsumerState<FillUpFormScreen> {
             ),
             cats.maybeWhen(
               data: (list) => DropdownButtonFormField<int>(
-                initialValue: _categoryId ??
+                initialValue:
+                    _categoryId ??
                     list
-                        .firstWhere((c) => c.isDefault, orElse: () => list.first)
+                        .firstWhere(
+                          (c) => c.isDefault,
+                          orElse: () => list.first,
+                        )
                         .id,
                 decoration: const InputDecoration(labelText: 'Categoria'),
                 items: [

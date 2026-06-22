@@ -66,7 +66,8 @@ class Reminders extends Table {
   DateTimeColumn get dueDate => dateTime().nullable()();
   RealColumn get dueOdometer => real().nullable()();
   IntColumn get recurEvery => integer().nullable()();
-  TextColumn get recurUnit => text().nullable()(); // DAY|MONTH|YEAR|KM|FIXED_DATE
+  TextColumn get recurUnit =>
+      text().nullable()(); // DAY|MONTH|YEAR|KM|FIXED_DATE
   IntColumn get recurKmEvery => integer().nullable()();
   IntColumn get leadDays => integer().nullable()();
   IntColumn get leadKm => integer().nullable()();
@@ -90,8 +91,11 @@ class Expenses extends Table {
   RealColumn get amount => real()();
   TextColumn get description => text().nullable()();
   BoolColumn get isRecurring => boolean().withDefault(const Constant(false))();
-  IntColumn get reminderId =>
-      integer().nullable().references(Reminders, #id, onDelete: KeyAction.setNull)();
+  IntColumn get reminderId => integer().nullable().references(
+    Reminders,
+    #id,
+    onDelete: KeyAction.setNull,
+  )();
   TextColumn get receiptPhotoPath => text().nullable()();
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime()();

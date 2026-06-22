@@ -12,21 +12,40 @@ final appRouter = GoRouter(
     StatefulShellRoute.indexedStack(
       builder: (context, state, shell) => _HomeShell(shell: shell),
       branches: [
-        StatefulShellBranch(routes: [
-          GoRoute(path: '/dashboard', builder: (_, _) => const DashboardScreen()),
-        ]),
-        StatefulShellBranch(routes: [
-          GoRoute(path: '/calendar', builder: (_, _) => const CalendarScreen()),
-        ]),
-        StatefulShellBranch(routes: [
-          GoRoute(path: '/scadenze', builder: (_, _) => const ScadenzeScreen()),
-        ]),
-        StatefulShellBranch(routes: [
-          GoRoute(path: '/stats', builder: (_, _) => const StatsScreen()),
-        ]),
-        StatefulShellBranch(routes: [
-          GoRoute(path: '/altro', builder: (_, _) => const AltroScreen()),
-        ]),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/dashboard',
+              builder: (_, _) => const DashboardScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/calendar',
+              builder: (_, _) => const CalendarScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/scadenze',
+              builder: (_, _) => const ScadenzeScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(path: '/stats', builder: (_, _) => const StatsScreen()),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(path: '/altro', builder: (_, _) => const AltroScreen()),
+          ],
+        ),
       ],
     ),
   ],
@@ -45,9 +64,18 @@ class _HomeShell extends StatelessWidget {
         onDestinationSelected: shell.goBranch,
         destinations: const [
           NavigationDestination(icon: Icon(Icons.dashboard), label: 'Home'),
-          NavigationDestination(icon: Icon(Icons.calendar_month), label: 'Calendario'),
-          NavigationDestination(icon: Icon(Icons.notifications), label: 'Scadenze'),
-          NavigationDestination(icon: Icon(Icons.bar_chart), label: 'Statistiche'),
+          NavigationDestination(
+            icon: Icon(Icons.calendar_month),
+            label: 'Calendario',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.notifications),
+            label: 'Scadenze',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.bar_chart),
+            label: 'Statistiche',
+          ),
           NavigationDestination(icon: Icon(Icons.more_horiz), label: 'Altro'),
         ],
       ),

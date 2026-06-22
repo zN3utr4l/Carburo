@@ -21,7 +21,9 @@ class DashboardScreen extends ConsumerWidget {
         error: (e, _) => Center(child: Text('Errore: $e')),
         data: (vehicle) {
           if (vehicle == null) {
-            return const Center(child: Text('Aggiungi un veicolo per iniziare.'));
+            return const Center(
+              child: Text('Aggiungi un veicolo per iniziare.'),
+            );
           }
           final stats = ref.watch(vehicleStatsProvider(vehicle.id));
           final cost = ref.watch(costSummaryProvider(vehicle.id));
@@ -51,8 +53,9 @@ class DashboardScreen extends ConsumerWidget {
                   StatCard(
                     label: 'Costo / km',
                     value: cost.maybeWhen(
-                      data: (c) =>
-                          c.costPerKm == null ? '—' : '${fmtEuro(c.costPerKm!)}/km',
+                      data: (c) => c.costPerKm == null
+                          ? '—'
+                          : '${fmtEuro(c.costPerKm!)}/km',
                       orElse: () => '—',
                     ),
                   ),
@@ -95,8 +98,7 @@ class DashboardScreen extends ConsumerWidget {
         },
       ),
       floatingActionButton: vehicleAsync.maybeWhen(
-        data: (v) =>
-            v == null ? null : _AddFab(vehicle: v),
+        data: (v) => v == null ? null : _AddFab(vehicle: v),
         orElse: () => null,
       ),
     );
@@ -118,13 +120,18 @@ class _AddFab extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                leading: const Icon(Icons.local_gas_station, color: Colors.teal),
+                leading: const Icon(
+                  Icons.local_gas_station,
+                  color: Colors.teal,
+                ),
                 title: const Text('Rifornimento'),
                 onTap: () {
                   Navigator.of(context).pop();
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => FillUpFormScreen(vehicleId: vehicle.id),
-                  ));
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => FillUpFormScreen(vehicleId: vehicle.id),
+                    ),
+                  );
                 },
               ),
               ListTile(
@@ -132,9 +139,11 @@ class _AddFab extends StatelessWidget {
                 title: const Text('Spesa'),
                 onTap: () {
                   Navigator.of(context).pop();
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => ExpenseFormScreen(vehicleId: vehicle.id),
-                  ));
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => ExpenseFormScreen(vehicleId: vehicle.id),
+                    ),
+                  );
                 },
               ),
             ],

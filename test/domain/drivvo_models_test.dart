@@ -5,27 +5,30 @@ import 'package:tanko/src/domain/models/expense.dart';
 import 'package:tanko/src/domain/models/reminder.dart';
 
 void main() {
-  test('Category round-trips with new fields; legacy JSON defaults to fuel', () {
-    const c = Category(
-      id: 1,
-      name: 'Assicurazione',
-      color: 0xFF1565C0,
-      kind: CategoryKind.expense,
-      iconCode: 0xe1a7,
-      ord: 3,
-    );
-    expect(Category.fromJson(c.toJson()), c);
+  test(
+    'Category round-trips with new fields; legacy JSON defaults to fuel',
+    () {
+      const c = Category(
+        id: 1,
+        name: 'Assicurazione',
+        color: 0xFF1565C0,
+        kind: CategoryKind.expense,
+        iconCode: 0xe1a7,
+        ord: 3,
+      );
+      expect(Category.fromJson(c.toJson()), c);
 
-    // Legacy v1 backup JSON has no 'kind' -> defaults to fuel.
-    final legacy = Category.fromJson({
-      'id': 1,
-      'name': 'Mine',
-      'color': 1,
-      'isDefault': true,
-    });
-    expect(legacy.kind, CategoryKind.fuel);
-    expect(legacy.ord, 0);
-  });
+      // Legacy v1 backup JSON has no 'kind' -> defaults to fuel.
+      final legacy = Category.fromJson({
+        'id': 1,
+        'name': 'Mine',
+        'color': 1,
+        'isDefault': true,
+      });
+      expect(legacy.kind, CategoryKind.fuel);
+      expect(legacy.ord, 0);
+    },
+  );
 
   test('Expense round-trips JSON', () {
     final e = Expense(

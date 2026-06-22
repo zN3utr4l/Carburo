@@ -28,12 +28,15 @@ class ExpenseFormScreen extends ConsumerStatefulWidget {
 
 class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
   final _formKey = GlobalKey<FormState>();
-  late final _amount =
-      TextEditingController(text: widget.initial?.amount.toString());
-  late final _odometer =
-      TextEditingController(text: widget.initial?.odometer?.toString());
-  late final _description =
-      TextEditingController(text: widget.initial?.description);
+  late final _amount = TextEditingController(
+    text: widget.initial?.amount.toString(),
+  );
+  late final _odometer = TextEditingController(
+    text: widget.initial?.odometer?.toString(),
+  );
+  late final _description = TextEditingController(
+    text: widget.initial?.description,
+  );
   late DateTime _date =
       widget.initial?.date ?? widget.initialDate ?? DateTime.now();
   late bool _isRecurring = widget.initial?.isRecurring ?? false;
@@ -60,25 +63,27 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
 
   Future<void> _pickPhoto() async {
     try {
-      final picked =
-          await ImagePicker().pickImage(source: ImageSource.gallery);
+      final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
       if (picked == null) return;
       final dir = await getApplicationDocumentsDirectory();
       final dest = p.join(dir.path, 'receipt_${picked.name}');
       await File(picked.path).copy(dest);
       setState(() => _photoPath = dest);
-    } catch (_) {/* best-effort */}
+    } catch (_) {
+      /* best-effort */
+    }
   }
 
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
     final cats = await ref.read(expenseCategoriesProvider.future);
-    final categoryId =
-        _categoryId ?? (cats.isEmpty ? null : cats.first.id);
+    final categoryId = _categoryId ?? (cats.isEmpty ? null : cats.first.id);
     if (categoryId == null) return;
     final now = DateTime.now();
     final base = widget.initial;
-    await ref.read(expenseRepositoryProvider).upsert(
+    await ref
+        .read(expenseRepositoryProvider)
+        .upsert(
           Expense(
             id: base?.id ?? 0,
             vehicleId: widget.vehicleId,
@@ -86,8 +91,9 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
             odometer: _parse(_odometer.text),
             categoryId: categoryId,
             amount: _parse(_amount.text)!,
-            description:
-                _description.text.trim().isEmpty ? null : _description.text.trim(),
+            description: _description.text.trim().isEmpty
+                ? null
+                : _description.text.trim(),
             isRecurring: _isRecurring,
             receiptPhotoPath: _photoPath,
             createdAt: base?.createdAt ?? now,
@@ -128,7 +134,8 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
             const SizedBox(height: 8),
             cats.maybeWhen(
               data: (list) => DropdownButtonFormField<int>(
-                initialValue: _categoryId ?? (list.isEmpty ? null : list.first.id),
+                initialValue:
+                    _categoryId ?? (list.isEmpty ? null : list.first.id),
                 decoration: const InputDecoration(
                   labelText: 'Categoria',
                   prefixIcon: Icon(Icons.category),
@@ -191,9 +198,11 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
             OutlinedButton.icon(
               onPressed: _pickPhoto,
               icon: const Icon(Icons.photo_camera),
-              label: Text(_photoPath == null
-                  ? 'Aggiungi foto scontrino'
-                  : 'Foto allegata ✓'),
+              label: Text(
+                _photoPath == null
+                    ? 'Aggiungi foto scontrino'
+                    : 'Foto allegata ✓',
+              ),
             ),
             const SizedBox(height: 16),
             FilledButton(onPressed: _save, child: const Text('Salva')),

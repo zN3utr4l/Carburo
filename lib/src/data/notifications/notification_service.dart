@@ -7,7 +7,7 @@ import 'package:timezone/timezone.dart' as tz;
 /// Scadenze screen always works regardless).
 class NotificationService {
   NotificationService([FlutterLocalNotificationsPlugin? plugin])
-      : _plugin = plugin ?? FlutterLocalNotificationsPlugin();
+    : _plugin = plugin ?? FlutterLocalNotificationsPlugin();
 
   final FlutterLocalNotificationsPlugin _plugin;
   bool _ready = false;
@@ -31,7 +31,8 @@ class NotificationService {
       await _plugin.initialize(settings: settings);
       await _plugin
           .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()
+            AndroidFlutterLocalNotificationsPlugin
+          >()
           ?.requestNotificationsPermission();
       _ready = true;
     } catch (_) {
@@ -59,7 +60,9 @@ class NotificationService {
         notificationDetails: _details,
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
       );
-    } catch (_) {/* best-effort */}
+    } catch (_) {
+      /* best-effort */
+    }
   }
 
   Future<void> showNow({
@@ -75,18 +78,24 @@ class NotificationService {
         body: body,
         notificationDetails: _details,
       );
-    } catch (_) {/* best-effort */}
+    } catch (_) {
+      /* best-effort */
+    }
   }
 
   Future<void> cancel(int id) async {
     try {
       await _plugin.cancel(id: id);
-    } catch (_) {/* best-effort */}
+    } catch (_) {
+      /* best-effort */
+    }
   }
 
   Future<void> cancelAll() async {
     try {
       await _plugin.cancelAll();
-    } catch (_) {/* best-effort */}
+    } catch (_) {
+      /* best-effort */
+    }
   }
 }

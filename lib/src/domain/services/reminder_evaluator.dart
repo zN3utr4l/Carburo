@@ -15,8 +15,9 @@ class ReminderEvaluator {
     required double currentOdometer,
   }) {
     final daysRemaining = r.dueDate?.difference(today).inDays;
-    final kmRemaining =
-        r.dueOdometer == null ? null : r.dueOdometer! - currentOdometer;
+    final kmRemaining = r.dueOdometer == null
+        ? null
+        : r.dueOdometer! - currentOdometer;
 
     if (!r.active) {
       return ReminderEvaluation(
@@ -34,10 +35,12 @@ class ReminderEvaluator {
     if (dueByDate || dueByKm) {
       status = ReminderStatus.overdue;
     } else {
-      final upcomingByDate = r.leadDays != null &&
+      final upcomingByDate =
+          r.leadDays != null &&
           r.dueDate != null &&
           !today.isBefore(r.dueDate!.subtract(Duration(days: r.leadDays!)));
-      final upcomingByKm = r.leadKm != null &&
+      final upcomingByKm =
+          r.leadKm != null &&
           r.dueOdometer != null &&
           currentOdometer >= (r.dueOdometer! - r.leadKm!);
       status = (upcomingByDate || upcomingByKm)
@@ -60,7 +63,8 @@ class ReminderEvaluator {
     required double completedOdometer,
   }) {
     final isFixed = r.recurUnit == RecurUnit.fixedDate;
-    final hasTimeRecur = r.recurEvery != null &&
+    final hasTimeRecur =
+        r.recurEvery != null &&
         r.recurUnit != null &&
         r.recurUnit != RecurUnit.km &&
         !isFixed;
@@ -94,11 +98,11 @@ class ReminderEvaluator {
   }
 
   DateTime _addInterval(DateTime from, int n, RecurUnit unit) => switch (unit) {
-        RecurUnit.day => from.add(Duration(days: n)),
-        RecurUnit.month => DateTime(from.year, from.month + n, from.day),
-        RecurUnit.year => DateTime(from.year + n, from.month, from.day),
-        _ => from,
-      };
+    RecurUnit.day => from.add(Duration(days: n)),
+    RecurUnit.month => DateTime(from.year, from.month + n, from.day),
+    RecurUnit.year => DateTime(from.year + n, from.month, from.day),
+    _ => from,
+  };
 
   DateTime _nextFixedDate(int month, int day, DateTime after) {
     var d = DateTime(after.year, month, day);

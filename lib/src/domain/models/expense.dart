@@ -20,5 +20,6 @@ abstract class Expense with _$Expense {
     required DateTime updatedAt,
   }) = _Expense;
 
-  factory Expense.fromJson(Map<String, Object?> json) => _$ExpenseFromJson(json);
+  factory Expense.fromJson(Map<String, Object?> json) =>
+      _$ExpenseFromJson(json);
 }

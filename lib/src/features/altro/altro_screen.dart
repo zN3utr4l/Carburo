@@ -8,9 +8,8 @@ class AltroScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void go(Widget screen) => Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => screen),
-        );
+    void go(Widget screen) =>
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
     return Scaffold(
       appBar: AppBar(title: const Text('Altro')),
       body: ListView(

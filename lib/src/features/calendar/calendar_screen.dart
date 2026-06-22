@@ -42,14 +42,17 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         error: (e, _) => Center(child: Text('Errore: $e')),
         data: (vehicle) {
           if (vehicle == null) {
-            return const Center(child: Text('Aggiungi un veicolo per iniziare.'));
+            return const Center(
+              child: Text('Aggiungi un veicolo per iniziare.'),
+            );
           }
           final eventsAsync = ref.watch(calendarEventsProvider(vehicle.id));
           return eventsAsync.when(
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (e, _) => Center(child: Text('Errore: $e')),
             data: (events) {
-              List<CalendarEvent> forDay(DateTime d) => events[_dayKey(d)] ?? [];
+              List<CalendarEvent> forDay(DateTime d) =>
+                  events[_dayKey(d)] ?? [];
               final dayEvents = forDay(_selectedDay);
               return Column(
                 children: [
@@ -61,7 +64,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                     selectedDayPredicate: (d) => isSameDay(d, _selectedDay),
                     eventLoader: forDay,
                     startingDayOfWeek: StartingDayOfWeek.monday,
-                    availableCalendarFormats: const {CalendarFormat.month: 'Mese'},
+                    availableCalendarFormats: const {
+                      CalendarFormat.month: 'Mese',
+                    },
                     headerStyle: const HeaderStyle(formatButtonVisible: false),
                     onDaySelected: (selected, focused) => setState(() {
                       _selectedDay = selected;
@@ -82,13 +87,16 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                                 Container(
                                   width: 6,
                                   height: 6,
-                                  margin:
-                                      const EdgeInsets.symmetric(horizontal: 1),
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 1,
+                                  ),
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: t == CalendarEventType.reminder &&
-                                            evs.any((e) =>
-                                                e.type == t && e.overdue)
+                                    color:
+                                        t == CalendarEventType.reminder &&
+                                            evs.any(
+                                              (e) => e.type == t && e.overdue,
+                                            )
                                         ? Colors.red
                                         : _typeColor[t],
                                   ),
@@ -102,8 +110,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                   const Divider(height: 1),
                   Expanded(
                     child: dayEvents.isEmpty
-                        ? _EmptyDay(
-                            onAdd: () => _addSheet(context, vehicle.id))
+                        ? _EmptyDay(onAdd: () => _addSheet(context, vehicle.id))
                         : ListView(
                             children: [
                               for (final e in dayEvents)
@@ -125,7 +132,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                                   onPressed: () =>
                                       _addSheet(context, vehicle.id),
                                   icon: const Icon(Icons.add),
-                                  label: const Text('Aggiungi per questo giorno'),
+                                  label: const Text(
+                                    'Aggiungi per questo giorno',
+                                  ),
                                 ),
                               ),
                             ],
@@ -153,12 +162,14 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
               title: const Text('Rifornimento'),
               onTap: () {
                 Navigator.of(context).pop();
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => FillUpFormScreen(
-                    vehicleId: vehicleId,
-                    initialDate: _selectedDay,
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => FillUpFormScreen(
+                      vehicleId: vehicleId,
+                      initialDate: _selectedDay,
+                    ),
                   ),
-                ));
+                );
               },
             ),
             ListTile(
@@ -166,12 +177,14 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
               title: const Text('Spesa'),
               onTap: () {
                 Navigator.of(context).pop();
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => ExpenseFormScreen(
-                    vehicleId: vehicleId,
-                    initialDate: _selectedDay,
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => ExpenseFormScreen(
+                      vehicleId: vehicleId,
+                      initialDate: _selectedDay,
+                    ),
                   ),
-                ));
+                );
               },
             ),
           ],

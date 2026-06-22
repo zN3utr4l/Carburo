@@ -24,7 +24,9 @@ class StatsScreen extends ConsumerWidget {
         error: (e, _) => Center(child: Text('Errore: $e')),
         data: (vehicle) {
           if (vehicle == null) {
-            return const Center(child: Text('Aggiungi un veicolo per iniziare.'));
+            return const Center(
+              child: Text('Aggiungi un veicolo per iniziare.'),
+            );
           }
           final months = ref.watch(monthlySpendProvider(vehicle.id));
           final comparison = ref.watch(vehicleComparisonProvider(vehicle.id));
@@ -32,16 +34,20 @@ class StatsScreen extends ConsumerWidget {
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              Text('Confronto reale vs dichiarato',
-                  style: Theme.of(context).textTheme.titleMedium),
+              Text(
+                'Confronto reale vs dichiarato',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
               const SizedBox(height: 8),
               comparison.maybeWhen(
                 data: (c) => _ComparisonCard(c),
                 orElse: () => const SizedBox.shrink(),
               ),
               const SizedBox(height: 24),
-              Text('Spesa mensile',
-                  style: Theme.of(context).textTheme.titleMedium),
+              Text(
+                'Spesa mensile',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
               const SizedBox(height: 8),
               SizedBox(
                 height: 200,
@@ -49,12 +55,15 @@ class StatsScreen extends ConsumerWidget {
                   data: (m) => m.isEmpty
                       ? const Center(child: Text('Nessun dato'))
                       : _MonthlySpendChart(m),
-                  orElse: () => const Center(child: CircularProgressIndicator()),
+                  orElse: () =>
+                      const Center(child: CircularProgressIndicator()),
                 ),
               ),
               const SizedBox(height: 24),
-              Text('Andamento prezzo al litro',
-                  style: Theme.of(context).textTheme.titleMedium),
+              Text(
+                'Andamento prezzo al litro',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
               const SizedBox(height: 8),
               SizedBox(
                 height: 200,
@@ -74,7 +83,8 @@ class StatsScreen extends ConsumerWidget {
                         ? const Center(child: Text('Nessun dato'))
                         : _PriceTrendChart(spots);
                   },
-                  orElse: () => const Center(child: CircularProgressIndicator()),
+                  orElse: () =>
+                      const Center(child: CircularProgressIndicator()),
                 ),
               ),
               const SizedBox(height: 24),
@@ -86,7 +96,11 @@ class StatsScreen extends ConsumerWidget {
     );
   }
 
-  List<Widget> _costComposition(BuildContext context, WidgetRef ref, int vehicleId) {
+  List<Widget> _costComposition(
+    BuildContext context,
+    WidgetRef ref,
+    int vehicleId,
+  ) {
     final fillsAsync = ref.watch(fillUpsProvider(vehicleId));
     final expensesAsync = ref.watch(expensesForVehicleProvider(vehicleId));
     final catsAsync = ref.watch(categoriesProvider);
@@ -106,12 +120,18 @@ class StatsScreen extends ConsumerWidget {
     final slices = <(String, double, Color)>[
       if (fuelTotal > 0) ('Carburante', fuelTotal, Colors.teal),
       for (final entry in byCat.entries)
-        (catName[entry.key] ?? 'Spesa', entry.value,
-            catColor[entry.key] ?? Colors.grey),
+        (
+          catName[entry.key] ?? 'Spesa',
+          entry.value,
+          catColor[entry.key] ?? Colors.grey,
+        ),
     ];
 
     return [
-      Text('Composizione costi', style: Theme.of(context).textTheme.titleMedium),
+      Text(
+        'Composizione costi',
+        style: Theme.of(context).textTheme.titleMedium,
+      ),
       const SizedBox(height: 8),
       if (slices.isEmpty)
         const Text('Nessun dato')
@@ -146,7 +166,9 @@ class StatsScreen extends ConsumerWidget {
                       children: [
                         Container(width: 12, height: 12, color: s.$3),
                         const SizedBox(width: 8),
-                        Expanded(child: Text(s.$1, overflow: TextOverflow.ellipsis)),
+                        Expanded(
+                          child: Text(s.$1, overflow: TextOverflow.ellipsis),
+                        ),
                         Text(fmtEuro(s.$2)),
                       ],
                     ),
@@ -156,8 +178,10 @@ class StatsScreen extends ConsumerWidget {
           ],
         ),
       const SizedBox(height: 24),
-      Text('Costo mensile (carburante vs spese)',
-          style: Theme.of(context).textTheme.titleMedium),
+      Text(
+        'Costo mensile (carburante vs spese)',
+        style: Theme.of(context).textTheme.titleMedium,
+      ),
       const SizedBox(height: 8),
       SizedBox(
         height: 200,
@@ -188,7 +212,10 @@ class _StackedChart extends StatelessWidget {
                   rodStackItems: [
                     BarChartRodStackItem(0, rows[i].fuel, Colors.teal),
                     BarChartRodStackItem(
-                        rows[i].fuel, rows[i].total, Colors.amber),
+                      rows[i].fuel,
+                      rows[i].total,
+                      Colors.amber,
+                    ),
                   ],
                 ),
               ],
@@ -286,8 +313,10 @@ class _MonthlySpendChart extends StatelessWidget {
               getTitlesWidget: (value, meta) {
                 final i = value.toInt();
                 if (i < 0 || i >= months.length) return const SizedBox.shrink();
-                return Text(months[i].label,
-                    style: const TextStyle(fontSize: 9));
+                return Text(
+                  months[i].label,
+                  style: const TextStyle(fontSize: 9),
+                );
               },
             ),
           ),
@@ -306,7 +335,11 @@ class _PriceTrendChart extends StatelessWidget {
     return LineChart(
       LineChartData(
         lineBarsData: [
-          LineChartBarData(spots: spots, isCurved: true, dotData: const FlDotData(show: false)),
+          LineChartBarData(
+            spots: spots,
+            isCurved: true,
+            dotData: const FlDotData(show: false),
+          ),
         ],
         borderData: FlBorderData(show: false),
         gridData: const FlGridData(show: false),

@@ -7,16 +7,16 @@ import '../database/mappers.dart';
 
 class ReminderRepositoryImpl implements ReminderRepository {
   ReminderRepositoryImpl(this._db, {ReminderEvaluator? evaluator})
-      : _evaluator = evaluator ?? const ReminderEvaluator();
+    : _evaluator = evaluator ?? const ReminderEvaluator();
 
   final AppDatabase _db;
   final ReminderEvaluator _evaluator;
 
   @override
   Future<List<Reminder>> forVehicle(int vehicleId) async {
-    final rows = await (_db.select(_db.reminders)
-          ..where((t) => t.vehicleId.equals(vehicleId)))
-        .get();
+    final rows = await (_db.select(
+      _db.reminders,
+    )..where((t) => t.vehicleId.equals(vehicleId))).get();
     return rows.map((r) => r.toDomain()).toList();
   }
 
@@ -43,9 +43,9 @@ class ReminderRepositoryImpl implements ReminderRepository {
     bool createExpense = false,
     double? expenseAmount,
   }) async {
-    final row = await (_db.select(_db.reminders)
-          ..where((t) => t.id.equals(reminderId)))
-        .getSingle();
+    final row = await (_db.select(
+      _db.reminders,
+    )..where((t) => t.id.equals(reminderId))).getSingle();
     final reminder = row.toDomain();
     final odo = odometer ?? reminder.dueOdometer ?? 0;
     final now = DateTime.now();
@@ -53,7 +53,9 @@ class ReminderRepositoryImpl implements ReminderRepository {
     if (createExpense &&
         reminder.linkedExpenseCategoryId != null &&
         expenseAmount != null) {
-      await _db.into(_db.expenses).insert(
+      await _db
+          .into(_db.expenses)
+          .insert(
             Expense(
               id: 0,
               vehicleId: reminder.vehicleId,
@@ -73,13 +75,14 @@ class ReminderRepositoryImpl implements ReminderRepository {
       completedDate: date,
       completedOdometer: odo,
     );
-    final updated = (next ??
-            reminder.copyWith(
-              active: false,
-              lastCompletedDate: date,
-              lastCompletedOdometer: odo,
-            ))
-        .copyWith(updatedAt: now);
+    final updated =
+        (next ??
+                reminder.copyWith(
+                  active: false,
+                  lastCompletedDate: date,
+                  lastCompletedOdometer: odo,
+                ))
+            .copyWith(updatedAt: now);
     await upsert(updated);
   }
 }

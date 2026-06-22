@@ -4,25 +4,25 @@ import 'package:tanko/src/domain/models/fill_up.dart';
 import 'package:tanko/src/domain/services/stats_service.dart';
 
 FillUp fuel(int month, double amount, double odo) => FillUp(
-      id: 0,
-      vehicleId: 1,
-      date: DateTime(2026, month, 10),
-      amount: amount,
-      odometer: odo,
-      categoryId: 1,
-      createdAt: DateTime(2026),
-      updatedAt: DateTime(2026),
-    );
+  id: 0,
+  vehicleId: 1,
+  date: DateTime(2026, month, 10),
+  amount: amount,
+  odometer: odo,
+  categoryId: 1,
+  createdAt: DateTime(2026),
+  updatedAt: DateTime(2026),
+);
 
 Expense exp(int month, double amount, int categoryId) => Expense(
-      id: 0,
-      vehicleId: 1,
-      date: DateTime(2026, month, 15),
-      categoryId: categoryId,
-      amount: amount,
-      createdAt: DateTime(2026),
-      updatedAt: DateTime(2026),
-    );
+  id: 0,
+  vehicleId: 1,
+  date: DateTime(2026, month, 15),
+  categoryId: categoryId,
+  amount: amount,
+  createdAt: DateTime(2026),
+  updatedAt: DateTime(2026),
+);
 
 void main() {
   const s = StatsService();
@@ -42,7 +42,11 @@ void main() {
   });
 
   test('expenseByCategory sums per category', () {
-    final m = s.expenseByCategory([exp(1, 300, 3), exp(2, 100, 3), exp(2, 50, 4)]);
+    final m = s.expenseByCategory([
+      exp(1, 300, 3),
+      exp(2, 100, 3),
+      exp(2, 50, 4),
+    ]);
     expect(m[3], 400);
     expect(m[4], 50);
   });

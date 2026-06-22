@@ -14,9 +14,12 @@ Future<Map<DateTime, List<CalendarEvent>>> calendarEvents(
   int vehicleId,
 ) async {
   final fills = await ref.watch(fillUpsProvider(vehicleId).future);
-  final expenses = await ref.watch(expensesForVehicleProvider(vehicleId).future);
-  final reminders =
-      await ref.watch(reminderRepositoryProvider).forVehicle(vehicleId);
+  final expenses = await ref.watch(
+    expensesForVehicleProvider(vehicleId).future,
+  );
+  final reminders = await ref
+      .watch(reminderRepositoryProvider)
+      .forVehicle(vehicleId);
   final cats = await ref.watch(categoriesProvider.future);
   final catName = {for (final c in cats) c.id: c.name};
   final today = DateTime.now();

@@ -24,7 +24,11 @@ class StatsService {
 
     for (final f in sorted) {
       totalSpend += f.amount;
-      byCategory.update(f.categoryId, (v) => v + f.amount, ifAbsent: () => f.amount);
+      byCategory.update(
+        f.categoryId,
+        (v) => v + f.amount,
+        ifAbsent: () => f.amount,
+      );
       if (f.liters != null) {
         litersWithPrice += f.liters!;
         costWithPrice += f.amount;
@@ -42,7 +46,9 @@ class StatsService {
 
     return VehicleStats(
       totalSpend: totalSpend,
-      avgPricePerLiter: litersWithPrice > 0 ? costWithPrice / litersWithPrice : null,
+      avgPricePerLiter: litersWithPrice > 0
+          ? costWithPrice / litersWithPrice
+          : null,
       avgConsumption: avgConsumption,
       totalKm: sorted.last.odometer - sorted.first.odometer,
       lastFillDate: lastDate,
@@ -64,8 +70,7 @@ class StatsService {
       );
     }
     final list = byKey.values.toList()
-      ..sort((a, b) =>
-          a.year != b.year ? a.year - b.year : a.month - b.month);
+      ..sort((a, b) => a.year != b.year ? a.year - b.year : a.month - b.month);
     return list;
   }
 

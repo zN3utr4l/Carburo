@@ -28,10 +28,14 @@ class SettingsScreen extends ConsumerWidget {
     final vehicles = await ref.read(vehicleRepositoryProvider).all();
     final categories = await ref.read(categoryRepositoryProvider).all();
     final fills = await ref.read(fillUpRepositoryProvider).all();
+    final expenses = await ref.read(expenseRepositoryProvider).all();
+    final reminders = await ref.read(reminderRepositoryProvider).all();
     return BackupData(
       vehicles: vehicles,
       categories: categories,
       fillUps: fills,
+      expenses: expenses,
+      reminders: reminders,
     );
   }
 
@@ -43,6 +47,11 @@ class SettingsScreen extends ConsumerWidget {
   Future<void> _exportCsv(WidgetRef ref) async {
     final data = await _gather(ref);
     await _share(_backup.toCsv(data.fillUps), 'tanko_rifornimenti.csv');
+  }
+
+  Future<void> _exportExpensesCsv(WidgetRef ref) async {
+    final data = await _gather(ref);
+    await _share(_backup.expensesCsv(data.expenses), 'tanko_spese.csv');
   }
 
   Future<void> _restore(BuildContext context, WidgetRef ref) async {
@@ -63,17 +72,26 @@ class SettingsScreen extends ConsumerWidget {
       return;
     }
 
+    // Insert in FK order: categories -> vehicles -> reminders -> expenses.
     final cats = ref.read(categoryRepositoryProvider);
     final vehicles = ref.read(vehicleRepositoryProvider);
     final fills = ref.read(fillUpRepositoryProvider);
+    final expenses = ref.read(expenseRepositoryProvider);
+    final reminders = ref.read(reminderRepositoryProvider);
     for (final c in data.categories) {
       await cats.upsert(c);
     }
     for (final v in data.vehicles) {
       await vehicles.upsert(v);
     }
+    for (final r in data.reminders) {
+      await reminders.upsert(r);
+    }
     for (final f in data.fillUps) {
       await fills.upsert(f);
+    }
+    for (final e in data.expenses) {
+      await expenses.upsert(e);
     }
     ref.invalidate(vehiclesProvider);
     ref.invalidate(dashboardVehicleProvider);
@@ -82,8 +100,9 @@ class SettingsScreen extends ConsumerWidget {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Ripristinati ${data.vehicles.length} veicoli e '
-            '${data.fillUps.length} rifornimenti.',
+            'Ripristinati ${data.vehicles.length} veicoli, '
+            '${data.fillUps.length} rifornimenti, '
+            '${data.expenses.length} spese.',
           ),
         ),
       );
@@ -100,14 +119,16 @@ class SettingsScreen extends ConsumerWidget {
     final categories = await ref.read(categoryRepositoryProvider).all();
     if (vehicles.isEmpty) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Crea prima un veicolo.')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Crea prima un veicolo.')));
       }
       return;
     }
-    final defaultCat =
-        categories.firstWhere((c) => c.isDefault, orElse: () => categories.first);
+    final defaultCat = categories.firstWhere(
+      (c) => c.isDefault,
+      orElse: () => categories.first,
+    );
     final result = const ExcelImporter().parseBytes(
       bytes,
       vehicleId: vehicles.first.id,
@@ -164,6 +185,11 @@ class SettingsScreen extends ConsumerWidget {
             leading: const Icon(Icons.table_chart),
             title: const Text('Esporta rifornimenti (CSV)'),
             onTap: () => _exportCsv(ref),
+          ),
+          ListTile(
+            leading: const Icon(Icons.table_chart_outlined),
+            title: const Text('Esporta spese (CSV)'),
+            onTap: () => _exportExpensesCsv(ref),
           ),
           ListTile(
             leading: const Icon(Icons.restore),

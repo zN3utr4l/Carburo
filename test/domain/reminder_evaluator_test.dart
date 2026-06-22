@@ -13,24 +13,23 @@ Reminder rem({
   int? leadDays,
   int? leadKm,
   bool active = true,
-}) =>
-    Reminder(
-      id: 1,
-      vehicleId: 1,
-      type: ReminderType.custom,
-      title: 'X',
-      triggerMode: triggerMode,
-      dueDate: dueDate,
-      dueOdometer: dueOdometer,
-      recurEvery: recurEvery,
-      recurUnit: recurUnit,
-      recurKmEvery: recurKmEvery,
-      leadDays: leadDays,
-      leadKm: leadKm,
-      active: active,
-      createdAt: DateTime(2026),
-      updatedAt: DateTime(2026),
-    );
+}) => Reminder(
+  id: 1,
+  vehicleId: 1,
+  type: ReminderType.custom,
+  title: 'X',
+  triggerMode: triggerMode,
+  dueDate: dueDate,
+  dueOdometer: dueOdometer,
+  recurEvery: recurEvery,
+  recurUnit: recurUnit,
+  recurKmEvery: recurKmEvery,
+  leadDays: leadDays,
+  leadKm: leadKm,
+  active: active,
+  createdAt: DateTime(2026),
+  updatedAt: DateTime(2026),
+);
 
 void main() {
   const ev = ReminderEvaluator();
@@ -74,8 +73,10 @@ void main() {
       leadKm: 1000,
     );
     test('far -> ok', () {
-      expect(ev.evaluate(r, today: today, currentOdometer: 30000).status,
-          ReminderStatus.ok);
+      expect(
+        ev.evaluate(r, today: today, currentOdometer: 30000).status,
+        ReminderStatus.ok,
+      );
     });
     test('within leadKm -> upcoming', () {
       final e = ev.evaluate(r, today: today, currentOdometer: 39500);
@@ -83,8 +84,10 @@ void main() {
       expect(e.kmRemaining, 500);
     });
     test('past odometer -> overdue', () {
-      expect(ev.evaluate(r, today: today, currentOdometer: 40500).status,
-          ReminderStatus.overdue);
+      expect(
+        ev.evaluate(r, today: today, currentOdometer: 40500).status,
+        ReminderStatus.overdue,
+      );
     });
   });
 
@@ -97,8 +100,10 @@ void main() {
       leadKm: 1000,
     );
     // date far, but km passed -> overdue
-    expect(ev.evaluate(r, today: today, currentOdometer: 41000).status,
-        ReminderStatus.overdue);
+    expect(
+      ev.evaluate(r, today: today, currentOdometer: 41000).status,
+      ReminderStatus.overdue,
+    );
   });
 
   test('inactive -> completed', () {
@@ -113,7 +118,11 @@ void main() {
   group('nextOccurrence', () {
     test('YEAR recurrence anchors to completion date', () {
       final next = ev.nextOccurrence(
-        rem(dueDate: DateTime(2026, 1, 1), recurEvery: 1, recurUnit: RecurUnit.year),
+        rem(
+          dueDate: DateTime(2026, 1, 1),
+          recurEvery: 1,
+          recurUnit: RecurUnit.year,
+        ),
         completedDate: DateTime(2026, 2, 15),
         completedOdometer: 0,
       );

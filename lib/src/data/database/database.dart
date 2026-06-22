@@ -28,28 +28,28 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
-        onCreate: (m) async {
-          await m.createAll();
-          await _seedFuelCategories();
-          await _seedExpenseCategories();
-        },
-        onUpgrade: (m, from, to) async {
-          if (from < 2) {
-            await m.addColumn(categories, categories.kind);
-            await m.addColumn(categories, categories.iconCode);
-            await m.addColumn(categories, categories.ord);
-            // Existing rows are fuel categories. The column default already sets
-            // 'fuel'; this is an explicit safety backfill.
-            await customStatement("UPDATE categories SET kind = 'fuel'");
-            await m.createTable(reminders);
-            await m.createTable(expenses);
-            await _seedExpenseCategories();
-          }
-        },
-        beforeOpen: (details) async {
-          await customStatement('PRAGMA foreign_keys = ON');
-        },
-      );
+    onCreate: (m) async {
+      await m.createAll();
+      await _seedFuelCategories();
+      await _seedExpenseCategories();
+    },
+    onUpgrade: (m, from, to) async {
+      if (from < 2) {
+        await m.addColumn(categories, categories.kind);
+        await m.addColumn(categories, categories.iconCode);
+        await m.addColumn(categories, categories.ord);
+        // Existing rows are fuel categories. The column default already sets
+        // 'fuel'; this is an explicit safety backfill.
+        await customStatement("UPDATE categories SET kind = 'fuel'");
+        await m.createTable(reminders);
+        await m.createTable(expenses);
+        await _seedExpenseCategories();
+      }
+    },
+    beforeOpen: (details) async {
+      await customStatement('PRAGMA foreign_keys = ON');
+    },
+  );
 
   Future<void> _seedFuelCategories() async {
     await into(categories).insert(
@@ -59,9 +59,9 @@ class AppDatabase extends _$AppDatabase {
         isDefault: const Value(true),
       ),
     );
-    await into(categories).insert(
-      CategoriesCompanion.insert(name: 'Not mine', color: 0xFF9E9E9E),
-    );
+    await into(
+      categories,
+    ).insert(CategoriesCompanion.insert(name: 'Not mine', color: 0xFF9E9E9E));
   }
 
   Future<void> _seedExpenseCategories() async {

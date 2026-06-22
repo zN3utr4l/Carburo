@@ -10,10 +10,11 @@ class ExpenseRepositoryImpl implements ExpenseRepository {
 
   @override
   Future<List<Expense>> forVehicle(int vehicleId) async {
-    final rows = await (_db.select(_db.expenses)
-          ..where((t) => t.vehicleId.equals(vehicleId))
-          ..orderBy([(t) => OrderingTerm.desc(t.date)]))
-        .get();
+    final rows =
+        await (_db.select(_db.expenses)
+              ..where((t) => t.vehicleId.equals(vehicleId))
+              ..orderBy([(t) => OrderingTerm.desc(t.date)]))
+            .get();
     return rows.map((r) => r.toDomain()).toList();
   }
 

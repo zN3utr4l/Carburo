@@ -28,5 +28,6 @@ abstract class Reminder with _$Reminder {
     required DateTime updatedAt,
   }) = _Reminder;
 
-  factory Reminder.fromJson(Map<String, Object?> json) => _$ReminderFromJson(json);
+  factory Reminder.fromJson(Map<String, Object?> json) =>
+      _$ReminderFromJson(json);
 }

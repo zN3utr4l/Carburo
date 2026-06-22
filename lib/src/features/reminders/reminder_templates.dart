@@ -33,14 +33,25 @@ class ReminderTemplate {
   /// Builds an editable draft anchored to [now] (id 0 = new).
   Reminder draft(int vehicleId, DateTime now) {
     DateTime? due;
-    if (recurUnit == RecurUnit.fixedDate && fixedMonth != null && fixedDay != null) {
+    if (recurUnit == RecurUnit.fixedDate &&
+        fixedMonth != null &&
+        fixedDay != null) {
       due = DateTime(now.year, fixedMonth!, fixedDay!);
-      if (!due.isAfter(now)) due = DateTime(now.year + 1, fixedMonth!, fixedDay!);
+      if (!due.isAfter(now)) {
+        due = DateTime(now.year + 1, fixedMonth!, fixedDay!);
+      }
     } else if (triggerMode != TriggerMode.distance) {
       due = switch (recurUnit) {
-        RecurUnit.year => DateTime(now.year + (recurEvery ?? 1), now.month, now.day),
-        RecurUnit.month =>
-          DateTime(now.year, now.month + (recurEvery ?? 1), now.day),
+        RecurUnit.year => DateTime(
+          now.year + (recurEvery ?? 1),
+          now.month,
+          now.day,
+        ),
+        RecurUnit.month => DateTime(
+          now.year,
+          now.month + (recurEvery ?? 1),
+          now.day,
+        ),
         _ => DateTime(now.year + 1, now.month, now.day),
       };
     }

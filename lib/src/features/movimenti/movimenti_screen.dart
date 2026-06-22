@@ -31,7 +31,9 @@ class _MovimentiScreenState extends ConsumerState<MovimentiScreen> {
         error: (e, _) => Center(child: Text('Errore: $e')),
         data: (vehicle) {
           if (vehicle == null) {
-            return const Center(child: Text('Aggiungi un veicolo per iniziare.'));
+            return const Center(
+              child: Text('Aggiungi un veicolo per iniziare.'),
+            );
           }
           final fills = ref.watch(fillUpsProvider(vehicle.id));
           final expenses = ref.watch(expensesForVehicleProvider(vehicle.id));
@@ -43,7 +45,10 @@ class _MovimentiScreenState extends ConsumerState<MovimentiScreen> {
                 child: SegmentedButton<_Filter>(
                   segments: const [
                     ButtonSegment(value: _Filter.all, label: Text('Tutti')),
-                    ButtonSegment(value: _Filter.fuel, label: Text('Carburante')),
+                    ButtonSegment(
+                      value: _Filter.fuel,
+                      label: Text('Carburante'),
+                    ),
                     ButtonSegment(value: _Filter.expense, label: Text('Spese')),
                   ],
                   selected: {_filter},
@@ -88,9 +93,12 @@ class _MovimentiScreenState extends ConsumerState<MovimentiScreen> {
             title: 'Rifornimento',
             subtitle: f.liters == null ? null : fmtLiters(f.liters!),
             amount: f.amount,
-            onTap: () => Navigator.of(context).push(MaterialPageRoute(
-              builder: (_) => FillUpFormScreen(vehicleId: vehicleId, initial: f),
-            )),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) =>
+                    FillUpFormScreen(vehicleId: vehicleId, initial: f),
+              ),
+            ),
           ),
       if (_filter != _Filter.fuel)
         for (final e in expenses)
@@ -101,9 +109,12 @@ class _MovimentiScreenState extends ConsumerState<MovimentiScreen> {
             title: catName[e.categoryId] ?? 'Spesa',
             subtitle: e.description,
             amount: e.amount,
-            onTap: () => Navigator.of(context).push(MaterialPageRoute(
-              builder: (_) => ExpenseFormScreen(vehicleId: vehicleId, initial: e),
-            )),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) =>
+                    ExpenseFormScreen(vehicleId: vehicleId, initial: e),
+              ),
+            ),
           ),
     ]..sort((a, b) => b.date.compareTo(a.date));
 
@@ -117,7 +128,10 @@ class _MovimentiScreenState extends ConsumerState<MovimentiScreen> {
             leading: Icon(r.icon, color: r.color),
             title: Text(r.title),
             subtitle: Text(
-              [fmtDate(r.date), if (r.subtitle != null) r.subtitle!].join(' · '),
+              [
+                fmtDate(r.date),
+                if (r.subtitle != null) r.subtitle!,
+              ].join(' · '),
             ),
             trailing: Text(
               fmtEuro(r.amount),

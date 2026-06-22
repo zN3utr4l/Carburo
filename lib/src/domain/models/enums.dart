@@ -5,7 +5,15 @@ enum SpecSource { carquery, manual }
 /// Discriminates fuel vs general-expense categories (they share one table).
 enum CategoryKind { fuel, expense }
 
-enum ReminderType { bollo, assicurazione, revisione, tagliando, gomme, patente, custom }
+enum ReminderType {
+  bollo,
+  assicurazione,
+  revisione,
+  tagliando,
+  gomme,
+  patente,
+  custom,
+}
 
 /// What makes a reminder due: a calendar date, an odometer threshold, or both
 /// (whichever comes first).

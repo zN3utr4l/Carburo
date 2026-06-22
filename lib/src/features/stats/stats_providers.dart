@@ -18,7 +18,9 @@ Future<List<MonthlyTotal>> monthlySpend(Ref ref, int vehicleId) async {
 @riverpod
 Future<CostSummary> costSummary(Ref ref, int vehicleId) async {
   final fills = await ref.watch(fillUpsProvider(vehicleId).future);
-  final expenses = await ref.watch(expensesForVehicleProvider(vehicleId).future);
+  final expenses = await ref.watch(
+    expensesForVehicleProvider(vehicleId).future,
+  );
   return ref.watch(statsServiceProvider).costSummary(fills, expenses);
 }
 

@@ -50,9 +50,9 @@ ExpenseRepository expenseRepository(Ref ref) =>
 
 @Riverpod(keepAlive: true)
 ReminderRepository reminderRepository(Ref ref) => ReminderRepositoryImpl(
-      ref.watch(appDatabaseProvider),
-      evaluator: ref.watch(reminderEvaluatorProvider),
-    );
+  ref.watch(appDatabaseProvider),
+  evaluator: ref.watch(reminderEvaluatorProvider),
+);
 
 @Riverpod(keepAlive: true)
 NotificationService notificationService(Ref ref) => NotificationService();

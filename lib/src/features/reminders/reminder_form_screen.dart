@@ -30,14 +30,18 @@ class ReminderFormScreen extends ConsumerStatefulWidget {
 class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
   final _formKey = GlobalKey<FormState>();
   late final _title = TextEditingController(text: widget.initial.title);
-  late final _dueOdometer =
-      TextEditingController(text: widget.initial.dueOdometer?.toString());
-  late final _recurKm =
-      TextEditingController(text: widget.initial.recurKmEvery?.toString());
-  late final _leadDays =
-      TextEditingController(text: widget.initial.leadDays?.toString());
-  late final _leadKm =
-      TextEditingController(text: widget.initial.leadKm?.toString());
+  late final _dueOdometer = TextEditingController(
+    text: widget.initial.dueOdometer?.toString(),
+  );
+  late final _recurKm = TextEditingController(
+    text: widget.initial.recurKmEvery?.toString(),
+  );
+  late final _leadDays = TextEditingController(
+    text: widget.initial.leadDays?.toString(),
+  );
+  late final _leadKm = TextEditingController(
+    text: widget.initial.leadKm?.toString(),
+  );
   late TriggerMode _trigger = widget.initial.triggerMode;
   late DateTime? _dueDate = widget.initial.dueDate;
   late bool _notify = widget.initial.notify;
@@ -46,7 +50,9 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
 
   static _Recur _initialRecur(Reminder r) {
     if (r.recurUnit == RecurUnit.fixedDate) return _Recur.fixedDate;
-    if (r.recurUnit == RecurUnit.year && r.recurEvery == 2) return _Recur.biennial;
+    if (r.recurUnit == RecurUnit.year && r.recurEvery == 2) {
+      return _Recur.biennial;
+    }
     if (r.recurUnit == RecurUnit.year) return _Recur.yearly;
     if (r.recurUnit == RecurUnit.month && r.recurEvery == 6) {
       return _Recur.semiannual;
@@ -63,12 +69,12 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
   }
 
   (int?, RecurUnit?) _recurValues() => switch (_recur) {
-        _Recur.none => (null, null),
-        _Recur.yearly => (1, RecurUnit.year),
-        _Recur.biennial => (2, RecurUnit.year),
-        _Recur.semiannual => (6, RecurUnit.month),
-        _Recur.fixedDate => (null, RecurUnit.fixedDate),
-      };
+    _Recur.none => (null, null),
+    _Recur.yearly => (1, RecurUnit.year),
+    _Recur.biennial => (2, RecurUnit.year),
+    _Recur.semiannual => (6, RecurUnit.month),
+    _Recur.fixedDate => (null, RecurUnit.fixedDate),
+  };
 
   bool get _hasDate => _trigger != TriggerMode.distance;
   bool get _hasKm => _trigger != TriggerMode.date;
@@ -111,7 +117,9 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
     final cats = ref.watch(expenseCategoriesProvider);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.initial.id == 0 ? 'Nuova scadenza' : 'Modifica scadenza'),
+        title: Text(
+          widget.initial.id == 0 ? 'Nuova scadenza' : 'Modifica scadenza',
+        ),
       ),
       body: Form(
         key: _formKey,
@@ -156,21 +164,25 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
               TextFormField(
                 controller: _leadDays,
                 keyboardType: TextInputType.number,
-                decoration:
-                    const InputDecoration(labelText: 'Preavviso (giorni)'),
+                decoration: const InputDecoration(
+                  labelText: 'Preavviso (giorni)',
+                ),
               ),
             ],
             if (_hasKm) ...[
               TextFormField(
                 controller: _dueOdometer,
                 keyboardType: TextInputType.number,
-                decoration:
-                    const InputDecoration(labelText: 'Scadenza (odometro km)'),
+                decoration: const InputDecoration(
+                  labelText: 'Scadenza (odometro km)',
+                ),
               ),
               TextFormField(
                 controller: _recurKm,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Ripeti ogni (km)'),
+                decoration: const InputDecoration(
+                  labelText: 'Ripeti ogni (km)',
+                ),
               ),
               TextFormField(
                 controller: _leadKm,

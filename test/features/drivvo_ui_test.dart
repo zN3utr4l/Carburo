@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tanko/src/data/database/database.dart';
 import 'package:tanko/src/data/repositories/expense_repository_impl.dart';
 import 'package:tanko/src/data/repositories/reminder_repository_impl.dart';
 import 'package:tanko/src/data/repositories/vehicle_repository_impl.dart';
@@ -12,21 +13,22 @@ import 'package:tanko/src/features/reminders/scadenze_screen.dart';
 import 'package:tanko/src/providers.dart';
 import '../helpers/test_db.dart';
 
-Future<int> _defaultVehicle(db) => VehicleRepositoryImpl(db).upsert(
-      Vehicle(
-        id: 0,
-        make: 'Renault',
-        model: 'Clio',
-        fuelType: FuelType.hybrid,
-        isDefault: true,
-        createdAt: DateTime(2026),
-        updatedAt: DateTime(2026),
-      ),
-    );
+Future<int> _defaultVehicle(AppDatabase db) => VehicleRepositoryImpl(db).upsert(
+  Vehicle(
+    id: 0,
+    make: 'Renault',
+    model: 'Clio',
+    fuelType: FuelType.hybrid,
+    isDefault: true,
+    createdAt: DateTime(2026),
+    updatedAt: DateTime(2026),
+  ),
+);
 
 void main() {
-  testWidgets('expense form saves an expense with the default category',
-      (tester) async {
+  testWidgets('expense form saves an expense with the default category', (
+    tester,
+  ) async {
     final db = makeTestDb();
     addTearDown(db.close);
     final vid = await _defaultVehicle(db);
