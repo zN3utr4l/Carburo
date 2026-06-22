@@ -1,0 +1,13 @@
+# Static analysis configuration for Tanko.
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - "**/*.freezed.dart"
+    - "**/*.g.dart"
+
+linter:
+  rules:
+    prefer_const_constructors: true
+    prefer_final_locals: true
+    require_trailing_commas: true
