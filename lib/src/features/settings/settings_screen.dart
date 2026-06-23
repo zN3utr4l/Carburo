@@ -56,9 +56,18 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   Future<void> _restore(BuildContext context, WidgetRef ref) async {
-    const typeGroup = XTypeGroup(label: 'Carburo backup', extensions: ['json']);
-    final file = await openFile(acceptedTypeGroups: [typeGroup]);
+    // Open unconstrained (*/*): a single-MIME filter greys out Google Drive
+    // entries in the system picker. Validate the extension after picking.
+    final file = await openFile();
     if (file == null) return;
+    if (!file.name.toLowerCase().endsWith('.json')) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Seleziona un file .json')),
+        );
+      }
+      return;
+    }
     final content = await file.readAsString();
 
     final BackupData data;
@@ -123,9 +132,18 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   Future<void> _importExcel(BuildContext context, WidgetRef ref) async {
-    const typeGroup = XTypeGroup(label: 'Excel', extensions: ['xlsx']);
-    final file = await openFile(acceptedTypeGroups: [typeGroup]);
+    // Open unconstrained (*/*): a single-MIME filter greys out Google Drive
+    // entries in the system picker. Validate the extension after picking.
+    final file = await openFile();
     if (file == null) return;
+    if (!file.name.toLowerCase().endsWith('.xlsx')) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Seleziona un file .xlsx')),
+        );
+      }
+      return;
+    }
     final bytes = await file.readAsBytes();
 
     final vehicles = await ref.read(vehicleRepositoryProvider).all();
