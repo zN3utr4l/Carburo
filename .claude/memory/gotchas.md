@@ -57,6 +57,15 @@ Durable landmines. Read before editing or shipping.
   API (`http`), is **opt-in only** (explicit "Cerca online"), and degrades to
   empty on any network error — never throws. Receipt parsing is best-effort:
   `ReceiptParser` pre-fills what it can and leaves the rest for manual entry.
+- **R8 release-only failure (ML Kit):** the **release** build runs R8 (because
+  core-library desugaring is on for flutter_local_notifications). R8 does a
+  whole-program check and fails with `Missing class
+  com.google.mlkit.vision.text.{chinese,devanagari,japanese,korean}…` because we
+  bundle only the Latin model. **Debug builds use D8 and skip this check**, so a
+  debug APK build is NOT enough — it broke the **CD** while CI (debug) was green.
+  Fixed with `-dontwarn` rules in `android/app/proguard-rules.pro` (wired via
+  `proguardFiles` in the `release` buildType). CI `build-apk` now builds
+  `--release` so R8 runs and catches this class of bug per-PR.
 
 ## Tests
 
