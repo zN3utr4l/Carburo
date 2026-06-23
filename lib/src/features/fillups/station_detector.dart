@@ -27,31 +27,26 @@ bool shouldOfferDetection(DateTime entryDate, DateTime now) =>
 /// Orchestrates GPS history-matching, optional online lookup, and receipt OCR.
 class StationDetector {
   StationDetector({
-    required LocationService location,
-    required FillUpRepository fillUps,
-    required StationMatcher matcher,
-    required StationLookupService lookup,
-    required OcrService ocr,
-    required ReceiptParser receiptParser,
-  })  : _location = location,
-        _fillUps = fillUps,
-        _matcher = matcher,
-        _lookup = lookup,
-        _ocr = ocr,
-        _receiptParser = receiptParser;
+    required this.location,
+    required this.fillUps,
+    required this.matcher,
+    required this.lookup,
+    required this.ocr,
+    required this.receiptParser,
+  });
 
-  final LocationService _location;
-  final FillUpRepository _fillUps;
-  final StationMatcher _matcher;
-  final StationLookupService _lookup;
-  final OcrService _ocr;
-  final ReceiptParser _receiptParser;
+  final LocationService location;
+  final FillUpRepository fillUps;
+  final StationMatcher matcher;
+  final StationLookupService lookup;
+  final OcrService ocr;
+  final ReceiptParser receiptParser;
 
   Future<StationDetection> detect() async {
-    final pos = await _location.current();
+    final pos = await location.current();
     if (pos == null) return const StationDetection();
-    final history = await _fillUps.all();
-    final match = _matcher.match(
+    final history = await fillUps.all();
+    final match = matcher.match(
       latitude: pos.latitude,
       longitude: pos.longitude,
       history: history,
@@ -60,11 +55,11 @@ class StationDetector {
   }
 
   Future<List<DetectedStation>> lookupOnline(GeoPoint at) =>
-      _lookup.nearby(at.latitude, at.longitude);
+      lookup.nearby(at.latitude, at.longitude);
 
   Future<ReceiptData> readReceipt(String imagePath) async {
-    final lines = await _ocr.readLines(imagePath);
-    return _receiptParser.parse(lines);
+    final lines = await ocr.readLines(imagePath);
+    return receiptParser.parse(lines);
   }
 }
 
