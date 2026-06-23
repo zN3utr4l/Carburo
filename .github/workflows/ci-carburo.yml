@@ -95,8 +95,8 @@ jobs:
           ./osv-scanner scan source --lockfile=pubspec.lock
 
   # Verify the Android build on every PR. The app has non-trivial native config
-  # (signing + flutter_local_notifications desugaring/manifest), so a debug APK
-  # build here catches breakage before it can reach main / CD.
+  # (signing + flutter_local_notifications desugaring/manifest + ML Kit), so an
+  # APK build here catches breakage before it can reach main / CD.
   build-apk:
     runs-on: ubuntu-latest
     steps:
@@ -112,5 +112,9 @@ jobs:
       - name: Flutter setup
         uses: ./.github/actions/flutter-setup
 
-      - name: Build debug APK
-        run: flutter build apk --debug
+      # RELEASE build so R8 runs: debug uses D8 and skips R8's whole-program
+      # checks, so a debug build would miss release-only failures like the ML Kit
+      # "Missing classes" R8 error. No keystore in CI → debug-signing fallback
+      # (see app/build.gradle.kts); CD still produces the signed release APK.
+      - name: Build release APK
+        run: flutter build apk --release

@@ -78,8 +78,10 @@ Put new logic in `domain/` as a pure, tested function whenever possible.
 
 - `main` is **PR-gated** (strict required checks + enforce_admins). Required
   checks: `build-and-test (ubuntu-latest)`, `version-check`, and `build-apk`
-  (a per-PR debug APK build that validates the Android/Gradle/manifest side —
-  `flutter test` runs on the Dart VM and never compiles the app). When `lib/` or
+  (a per-PR **release** APK build so R8 runs — `flutter test` is on the Dart VM
+  and never compiles the app, and debug uses D8 which skips R8's whole-program
+  checks, so only a release build catches R8 failures like missing keep rules).
+  When `lib/` or
   `pubspec.yaml` changes, bump `x.y.z` in `pubspec.yaml`; CD releases
   `v<version>` (APK attached) on merge to `main`.
 - Release APK is debug-signed unless the `ANDROID_KEYSTORE_*` secrets are set

@@ -62,6 +62,13 @@ android {
                 // installable (sideload). Set the secrets for stable signing.
                 signingConfigs.getByName("debug")
             }
+            // R8 runs for release (core-library desugaring is on). Apply our
+            // keep/dontwarn rules — notably for google_mlkit_text_recognition's
+            // optional script classes we don't bundle. See proguard-rules.pro.
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
         }
     }
 }
