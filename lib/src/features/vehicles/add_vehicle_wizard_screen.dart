@@ -4,6 +4,7 @@ import '../../domain/models/catalog.dart';
 import '../../domain/models/enums.dart';
 import '../../domain/models/reminder.dart';
 import '../../domain/models/vehicle.dart';
+import '../../domain/services/vehicle_lookup_service.dart';
 import '../../providers.dart';
 import '../reminders/reminder_providers.dart';
 import 'catalog_providers.dart';
@@ -116,6 +117,57 @@ class _AddVehicleWizardScreenState
     });
   }
 
+  List<CatalogTrim> _trimSuggestions(List<Vehicle> vehicles) {
+    final suggestions = <CatalogTrim>[];
+    final seen = <String>{};
+
+    void add(CatalogTrim trim) {
+      final name = trim.name.trim();
+      if (name.isEmpty) return;
+      if (!seen.add(name.toLowerCase())) return;
+      suggestions.add(trim.name == name ? trim : trim.copyWith(name: name));
+    }
+
+    for (final trim in _trims) {
+      add(trim);
+    }
+
+    final make = _make.text.trim().toLowerCase();
+    final model = _model.text.trim().toLowerCase();
+    if (make.isNotEmpty && model.isNotEmpty) {
+      for (final vehicle in vehicles) {
+        final trim = vehicle.trim?.trim();
+        if (trim == null || trim.isEmpty) continue;
+        if (vehicle.make.trim().toLowerCase() != make) continue;
+        if (vehicle.model.trim().toLowerCase() != model) continue;
+        add(
+          CatalogTrim(
+            name: trim,
+            fuelType: vehicle.fuelType,
+            consumptionL100: vehicle.specs.mfrConsumption,
+            tankCapacityL: vehicle.specs.tankCapacityL,
+            powerPs: vehicle.specs.powerPs,
+          ),
+        );
+      }
+    }
+
+    final currentTrim = _trimCtrl.text.trim();
+    if (currentTrim.isNotEmpty) {
+      add(
+        CatalogTrim(
+          name: currentTrim,
+          fuelType: _fuel,
+          tankCapacityL: _parse(_tank.text),
+          consumptionL100: _parse(_consumption.text),
+          powerPs: int.tryParse(_power.text.trim()),
+        ),
+      );
+    }
+
+    return suggestions;
+  }
+
   void _markManual() {
     if (_specSource != SpecSource.manual) {
       setState(() => _specSource = SpecSource.manual);
@@ -158,6 +210,10 @@ class _AddVehicleWizardScreenState
     if (pasted == null) return;
     final data = ref.read(vehicleLookupServiceProvider).parsePastedText(pasted);
     if (!mounted) return;
+    if (!data.hasRecognizedFields) {
+      _showLookupPasteFeedback(data);
+      return;
+    }
     setState(() {
       final normalizedPlate = ref
           .read(vehicleLookupServiceProvider)
@@ -170,14 +226,34 @@ class _AddVehicleWizardScreenState
       if (data.fuelType != null) _fuel = data.fuelType!;
       if (data.euroClass != null) _euroClass = data.euroClass;
       if (data.powerPs != null) _power.text = data.powerPs!.toString();
-      _insuranceCompany = data.insuranceCompany;
-      _insuranceExpiry = data.insuranceExpiry;
+      if (data.insuranceCompany != null) {
+        _insuranceCompany = data.insuranceCompany;
+      }
+      if (data.insuranceExpiry != null) _insuranceExpiry = data.insuranceExpiry;
       _fieldVersion++;
       if (data.hasVehicleFields) _specSource = SpecSource.online;
     });
     if (data.make != null) {
       await _loadModels(data.make!);
     }
+    if (!mounted) return;
+    _showLookupPasteFeedback(data);
+  }
+
+  void _showLookupPasteFeedback(VehicleLookupData data) {
+    final labels = data.recognizedFieldLabels;
+    final message = labels.isEmpty
+        ? 'Nessun dato riconosciuto. Incolla campi come Marca: Fiat, Modello: Panda, Allestimento: Lounge, Classe ambientale: Euro 6.'
+        : 'Importati: ${labels.join(', ')}';
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(message),
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.fromLTRB(16, 0, 16, 88),
+        ),
+      );
   }
 
   Future<void> _save() async {
@@ -248,6 +324,8 @@ class _AddVehicleWizardScreenState
             ?.value
             .vehicleOnlineLookupEnabled ??
         false;
+    final vehicles = ref.watch(vehiclesProvider).asData?.value ?? const [];
+    final trimSuggestions = _trimSuggestions(vehicles);
     final thisYear = DateTime.now().year;
     return Scaffold(
       appBar: AppBar(title: const Text('Nuovo veicolo')),
@@ -327,7 +405,7 @@ class _AddVehicleWizardScreenState
                   child: _TrimField(
                     key: ValueKey('trim-$_fieldVersion'),
                     controller: _trimCtrl,
-                    trims: _trims,
+                    trims: trimSuggestions,
                     onSelected: _applyTrim,
                     onChanged: (_) => _markManual(),
                   ),
