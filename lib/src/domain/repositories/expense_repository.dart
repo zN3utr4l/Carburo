@@ -5,4 +5,5 @@ abstract class ExpenseRepository {
   Future<List<Expense>> all();
   Future<int> upsert(Expense expense);
   Future<void> delete(int id);
+  Future<void> deleteMany(List<int> ids);
 }

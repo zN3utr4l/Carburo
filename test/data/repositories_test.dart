@@ -109,6 +109,75 @@ void main() {
     expect((await vehicles.defaultVehicle())!.id, secondId);
   });
 
+  test('deleteMany removes the given fill-ups and expenses in bulk', () async {
+    final db = makeTestDb();
+    addTearDown(db.close);
+    final cats = CategoryRepositoryImpl(db);
+    final vehicles = VehicleRepositoryImpl(db);
+    final fills = FillUpRepositoryImpl(db);
+    final expenses = ExpenseRepositoryImpl(db);
+
+    final categories = await cats.all();
+    final fuelCat = categories.firstWhere((c) => c.kind == CategoryKind.fuel);
+    final expenseCat = categories.firstWhere((c) => c.name == 'Bollo');
+    final vid = await vehicles.upsert(
+      Vehicle(
+        id: 0,
+        make: 'Renault',
+        model: 'Clio',
+        fuelType: FuelType.hybrid,
+        createdAt: DateTime(2026),
+        updatedAt: DateTime(2026),
+      ),
+    );
+
+    final fuelIds = <int>[];
+    for (var i = 0; i < 3; i++) {
+      fuelIds.add(
+        await fills.upsert(
+          FillUp(
+            id: 0,
+            vehicleId: vid,
+            date: DateTime(2026, 1, i + 1),
+            amount: 40,
+            liters: 30,
+            odometer: 1000 + i * 100,
+            categoryId: fuelCat.id,
+            createdAt: DateTime(2026),
+            updatedAt: DateTime(2026),
+          ),
+        ),
+      );
+    }
+    final expenseIds = <int>[];
+    for (var i = 0; i < 2; i++) {
+      expenseIds.add(
+        await expenses.upsert(
+          Expense(
+            id: 0,
+            vehicleId: vid,
+            date: DateTime(2026, 2, i + 1),
+            categoryId: expenseCat.id,
+            amount: 100,
+            createdAt: DateTime(2026),
+            updatedAt: DateTime(2026),
+          ),
+        ),
+      );
+    }
+
+    // Delete two of the three fill-ups and all expenses; the empty-list call
+    // must be a no-op.
+    await fills.deleteMany([fuelIds[0], fuelIds[2]]);
+    await expenses.deleteMany(expenseIds);
+    await fills.deleteMany(const []);
+
+    final remainingFills = await fills.forVehicle(vid);
+    expect(remainingFills, hasLength(1));
+    expect(remainingFills.single.id, fuelIds[1]);
+    expect(await expenses.forVehicle(vid), isEmpty);
+  });
+
   test(
     'deleting a vehicle cascades fill-ups, expenses, and reminders',
     () async {

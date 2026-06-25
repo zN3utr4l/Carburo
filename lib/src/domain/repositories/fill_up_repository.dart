@@ -5,4 +5,5 @@ abstract class FillUpRepository {
   Future<List<FillUp>> all();
   Future<int> upsert(FillUp fillUp);
   Future<void> delete(int id);
+  Future<void> deleteMany(List<int> ids);
 }

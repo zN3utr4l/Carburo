@@ -33,4 +33,10 @@ class FillUpRepositoryImpl implements FillUpRepository {
   Future<void> delete(int id) async {
     await (_db.delete(_db.fillUps)..where((t) => t.id.equals(id))).go();
   }
+
+  @override
+  Future<void> deleteMany(List<int> ids) async {
+    if (ids.isEmpty) return;
+    await (_db.delete(_db.fillUps)..where((t) => t.id.isIn(ids))).go();
+  }
 }
