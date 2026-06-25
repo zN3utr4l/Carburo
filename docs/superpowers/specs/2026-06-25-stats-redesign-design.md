@@ -79,10 +79,15 @@ barre/linea, per non duplicarla.
    con nota "(servono i litri)".
 6. **Composizione costi** (ciambella) — legenda con percentuali; centro con
    totale.
-7. **Spese mie / non mie** *(NEW, ciambella)*: somma rifornimenti `paidByOther=false`
-   vs `true`. Se non c'è nessun "non mio" la ciambella a fetta unica è inutile →
-   in quel caso mostro solo una riga-nota ("tutti i rifornimenti sono tuoi");
-   la ciambella compare quando esiste almeno un "non mio".
+7. **Spese mie / non mie** *(NEW, ciambella)*: raggruppa i rifornimenti per
+   **categoria carburante**. Le categorie carburante seed sono già `Mine` e
+   `Not mine` (`_seedFuelCategories`), quindi la distinzione esiste già nel
+   modello (`FillUp.categoryId`) — **nessun campo nuovo, nessuna migrazione**.
+   L'import assegna tutto alla categoria default (`Mine`); l'utente segna i ~3
+   "non miei" cambiando la **Categoria** del rifornimento col dropdown **già
+   presente** nel form (`fill_up_form_screen.dart`). Se esiste una sola
+   categoria carburante usata, mostro una riga-nota invece di una ciambella a
+   fetta unica.
 8. **Top distributori** *(NEW)*: classifica per n° rifornimenti su `station`
    non nullo; stato vuoto esplicito ("nessuna stazione registrata") sugli storici.
 9. **Spesa per anno** *(NEW, opzionale)*: barre per anno, utile in "Sempre".
@@ -90,12 +95,9 @@ barre/linea, per non duplicarla.
 
 ## Modifica dati
 
-- **`FillUp.paidByOther`** (`bool`, default `false`). Colonna Drift
-  `paid_by_other` su `FillUps` con `withDefault(const Constant(false))`.
-- **Migrazione schema v3 → v4**: `if (from < 4) await m.addColumn(fillUps, fillUps.paidByOther);`
-- Mapper `toDomain`/`toCompanion` aggiornati.
-- **Form rifornimento**: switch "Pagato da altri" (`SwitchListTile`).
-- Backup JSON: includere il nuovo campo (retro-compatibile: assente = false).
+**Nessuna.** Niente nuovo campo, niente migrazione schema: "mie/non mie" sfrutta
+le categorie carburante esistenti (`Mine`/`Not mine`) e il dropdown Categoria già
+presente nel form rifornimento. Lo schema resta a v3.
 
 ## Domain logic (pura, testata)
 
@@ -106,7 +108,8 @@ Aggiunti a `StatsService` (dove vive già la logica analoga; niente classe nuova
 - da cui: **min** (pieno con meno km), **max** (più km), **media**.
 - `costPerKm = totalSpend / totalKm` (riusa `VehicleStats.totalKm`).
 - `yearlySpend(fills)` → totale per anno.
-- `mineVsOthers(fills)` → `(double mine, double others)`.
+- `fuelByCategory(fills)` → `Map<int catId, double>` (specchio di
+  `expenseByCategory`); la ciambella "mie/non mie" usa questa + i nomi categoria.
 - `topStations(fills, {limit})` → `[(station, count, total)]` su `station != null`.
 
 I widget di presentazione vivono in `features/stats/widgets/` (uno per
@@ -124,10 +127,8 @@ aggiungono sezioni.
 
 ## Testing
 
-- Unit test puri (`test/domain` o `test/data`) per: `kmPerFill` (min/max/media,
-  salta delta ≤ 0, < 2 fills), `yearlySpend`, `mineVsOthers`, `topStations`,
-  `costPerKm`.
-- Test repository per la migrazione v3→v4 / round-trip di `paidByOther`.
+- Unit test puri (`test/domain`) per: `kmPerFill` (min/max/media, salta delta ≤
+  0, < 2 fills), `yearlySpend`, `fuelByCategory`, `topStations`, `costPerKm`.
 - Widget test leggero: la pagina Statistiche mostra le nuove sezioni e gli
   empty-state corretti quando mancano litri/stazione.
 
