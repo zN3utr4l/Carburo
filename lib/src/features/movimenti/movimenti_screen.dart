@@ -24,11 +24,30 @@ class _MovimentiScreenState extends ConsumerState<MovimentiScreen> {
   _Filter _filter = _Filter.all;
   final _query = TextEditingController();
 
+  /// Multi-select state. Keys are `'f:<id>'` (fill-up) or `'e:<id>'` (expense).
+  bool _selecting = false;
+  final Set<String> _selected = {};
+
   @override
   void dispose() {
     _query.dispose();
     super.dispose();
   }
+
+  void _exitSelection() => setState(() {
+    _selecting = false;
+    _selected.clear();
+  });
+
+  void _toggle(_Row r) => setState(() {
+    if (!_selected.remove(r.key)) _selected.add(r.key);
+    if (_selected.isEmpty) _selecting = false;
+  });
+
+  void _enterSelection(_Row r) => setState(() {
+    _selecting = true;
+    _selected.add(r.key);
+  });
 
   Future<void> _confirmDelete({
     required String title,
@@ -55,22 +74,61 @@ class _MovimentiScreenState extends ConsumerState<MovimentiScreen> {
     await delete();
   }
 
+  Future<void> _deleteSelected(int vehicleId) async {
+    final fuelIds = <int>[];
+    final expenseIds = <int>[];
+    for (final key in _selected) {
+      final id = int.parse(key.substring(2));
+      (key.startsWith('f:') ? fuelIds : expenseIds).add(id);
+    }
+    final count = fuelIds.length + expenseIds.length;
+    if (count == 0) return;
+
+    final messenger = ScaffoldMessenger.of(context);
+    await _confirmDelete(
+      title: count == 1
+          ? 'Eliminare il movimento selezionato?'
+          : 'Eliminare $count movimenti selezionati?',
+      delete: () async {
+        await ref.read(fillUpRepositoryProvider).deleteMany(fuelIds);
+        await ref.read(expenseRepositoryProvider).deleteMany(expenseIds);
+        ref.invalidate(fillUpsProvider(vehicleId));
+        ref.invalidate(expensesForVehicleProvider(vehicleId));
+        if (!mounted) return;
+        setState(() {
+          _selecting = false;
+          _selected.clear();
+        });
+        messenger.showSnackBar(
+          SnackBar(content: Text('$count movimenti eliminati')),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final vehicleAsync = ref.watch(dashboardVehicleProvider);
-    return Scaffold(
-      appBar: AppBar(title: const Text('Movimenti')),
-      body: vehicleAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Errore: $e')),
-        data: (vehicle) {
-          if (vehicle == null) {
-            return const EmptyVehiclePrompt();
-          }
-          final fills = ref.watch(fillUpsProvider(vehicle.id));
-          final expenses = ref.watch(expensesForVehicleProvider(vehicle.id));
-          final cats = ref.watch(allCategoriesProvider);
-          return Column(
+    return vehicleAsync.when(
+      loading: () => _scaffold(body: const Center(child: CircularProgressIndicator())),
+      error: (e, _) => _scaffold(body: Center(child: Text('Errore: $e'))),
+      data: (vehicle) {
+        if (vehicle == null) {
+          return _scaffold(body: const EmptyVehiclePrompt());
+        }
+        final fills = ref.watch(fillUpsProvider(vehicle.id));
+        final expenses = ref.watch(expensesForVehicleProvider(vehicle.id));
+        final cats = ref.watch(allCategoriesProvider);
+        final filtered = _filteredRows(
+          vehicle.id,
+          fills.asData?.value ?? const [],
+          expenses.asData?.value ?? const [],
+          {for (final c in cats.asData?.value ?? const []) c.id: c.name},
+        );
+        return _scaffold(
+          vehicleId: vehicle.id,
+          filtered: filtered,
+          body: Column(
             children: [
               Padding(
                 padding: const EdgeInsets.all(8),
@@ -89,8 +147,13 @@ class _MovimentiScreenState extends ConsumerState<MovimentiScreen> {
                         ),
                       ],
                       selected: {_filter},
-                      onSelectionChanged: (s) =>
-                          setState(() => _filter = s.first),
+                      // Switching the type filter changes what "all" means, so
+                      // clear any selection to avoid deleting now-hidden rows.
+                      onSelectionChanged: (s) => setState(() {
+                        _filter = s.first;
+                        _selecting = false;
+                        _selected.clear();
+                      }),
                     ),
                     const SizedBox(height: 8),
                     TextField(
@@ -107,28 +170,61 @@ class _MovimentiScreenState extends ConsumerState<MovimentiScreen> {
               Expanded(
                 child: (fills.isLoading || expenses.isLoading)
                     ? const Center(child: CircularProgressIndicator())
-                    : _list(
-                        context,
-                        ref,
-                        vehicle.id,
-                        fills.asData?.value ?? const [],
-                        expenses.asData?.value ?? const [],
-                        {
-                          for (final c in cats.asData?.value ?? const [])
-                            c.id: c.name,
-                        },
-                      ),
+                    : _listView(filtered),
               ),
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _list(
-    BuildContext context,
-    WidgetRef ref,
+  /// Builds the screen scaffold; the app bar becomes a contextual selection bar
+  /// while [_selecting]. [vehicleId]/[filtered] are only needed in that mode.
+  Widget _scaffold({required Widget body, int? vehicleId, List<_Row> filtered = const []}) {
+    final allSelected =
+        filtered.isNotEmpty && filtered.every((r) => _selected.contains(r.key));
+    return Scaffold(
+      appBar: _selecting
+          ? AppBar(
+              leading: IconButton(
+                tooltip: 'Annulla selezione',
+                icon: const Icon(Icons.close),
+                onPressed: _exitSelection,
+              ),
+              title: Text('${_selected.length} selezionati'),
+              actions: [
+                IconButton(
+                  tooltip: allSelected ? 'Deseleziona tutto' : 'Seleziona tutto',
+                  icon: Icon(allSelected ? Icons.deselect : Icons.select_all),
+                  onPressed: filtered.isEmpty
+                      ? null
+                      : () => setState(() {
+                          if (allSelected) {
+                            _selected.clear();
+                            _selecting = false;
+                          } else {
+                            _selected
+                              ..clear()
+                              ..addAll(filtered.map((r) => r.key));
+                          }
+                        }),
+                ),
+                IconButton(
+                  tooltip: 'Elimina selezionati',
+                  icon: const Icon(Icons.delete),
+                  onPressed: (_selected.isEmpty || vehicleId == null)
+                      ? null
+                      : () => _deleteSelected(vehicleId),
+                ),
+              ],
+            )
+          : AppBar(title: const Text('Movimenti')),
+      body: body,
+    );
+  }
+
+  List<_Row> _filteredRows(
     int vehicleId,
     List<FillUp> fills,
     List<Expense> expenses,
@@ -138,6 +234,8 @@ class _MovimentiScreenState extends ConsumerState<MovimentiScreen> {
       if (_filter != _Filter.expense)
         for (final f in fills)
           _Row(
+            isFuel: true,
+            id: f.id,
             date: f.date,
             icon: Icons.local_gas_station,
             color: Colors.teal,
@@ -161,6 +259,8 @@ class _MovimentiScreenState extends ConsumerState<MovimentiScreen> {
       if (_filter != _Filter.fuel)
         for (final e in expenses)
           _Row(
+            isFuel: false,
+            id: e.id,
             date: e.date,
             icon: Icons.payments,
             color: Colors.amber.shade800,
@@ -183,32 +283,48 @@ class _MovimentiScreenState extends ConsumerState<MovimentiScreen> {
           ),
     ]..sort((a, b) => b.date.compareTo(a.date));
     final q = _query.text.trim().toLowerCase();
-    final filtered = q.isEmpty
-        ? rows
-        : rows
-              .where(
-                (r) =>
-                    r.title.toLowerCase().contains(q) ||
-                    (r.subtitle?.toLowerCase().contains(q) ?? false),
-              )
-              .toList();
+    if (q.isEmpty) return rows;
+    return rows
+        .where(
+          (r) =>
+              r.title.toLowerCase().contains(q) ||
+              (r.subtitle?.toLowerCase().contains(q) ?? false),
+        )
+        .toList();
+  }
 
+  Widget _listView(List<_Row> filtered) {
     if (filtered.isEmpty) {
       return const Center(child: Text('Nessun movimento.'));
     }
     return ListView(
       children: [
         for (final r in filtered)
-          ListTile(
-            leading: Icon(r.icon, color: r.color),
-            title: Text(r.title),
-            subtitle: Text(
-              [
-                fmtDate(r.date),
-                if (r.subtitle != null) r.subtitle!,
-              ].join(' · '),
-            ),
-            trailing: Row(
+          _movimentoTile(r),
+      ],
+    );
+  }
+
+  Widget _movimentoTile(_Row r) {
+    final selected = _selected.contains(r.key);
+    return ListTile(
+      selected: selected,
+      leading: _selecting
+          ? Checkbox(value: selected, onChanged: (_) => _toggle(r))
+          : Icon(r.icon, color: r.color),
+      title: Text(r.title),
+      subtitle: Text(
+        [
+          fmtDate(r.date),
+          if (r.subtitle != null) r.subtitle!,
+        ].join(' · '),
+      ),
+      trailing: _selecting
+          ? Text(
+              fmtEuro(r.amount),
+              style: Theme.of(context).textTheme.titleMedium,
+            )
+          : Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
@@ -222,16 +338,16 @@ class _MovimentiScreenState extends ConsumerState<MovimentiScreen> {
                 ),
               ],
             ),
-            onLongPress: r.onDelete,
-            onTap: r.onTap,
-          ),
-      ],
+      onTap: _selecting ? () => _toggle(r) : r.onTap,
+      onLongPress: _selecting ? null : () => _enterSelection(r),
     );
   }
 }
 
 class _Row {
   _Row({
+    required this.isFuel,
+    required this.id,
     required this.date,
     required this.icon,
     required this.color,
@@ -241,6 +357,8 @@ class _Row {
     required this.onDelete,
     this.subtitle,
   });
+  final bool isFuel;
+  final int id;
   final DateTime date;
   final IconData icon;
   final Color color;
@@ -249,4 +367,6 @@ class _Row {
   final double amount;
   final VoidCallback onTap;
   final VoidCallback onDelete;
+
+  String get key => '${isFuel ? 'f' : 'e'}:$id';
 }

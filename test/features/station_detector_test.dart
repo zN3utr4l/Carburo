@@ -29,6 +29,8 @@ class _FakeRepo implements FillUpRepository {
   Future<int> upsert(FillUp fillUp) async => 0;
   @override
   Future<void> delete(int id) async {}
+  @override
+  Future<void> deleteMany(List<int> ids) async {}
 }
 
 class _FakeOcr implements OcrService {
